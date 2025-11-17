@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EGTEA Gaze Data Visualization</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>EGTEA Gaze Data Visualization</h1>
+            <p>OP01-R01-PastaSalad Dataset Quality Check</p>
+        </header>
+
+        <div class="navigation">
+            <button id="prevBtn" onclick="previousEpisode()">◀ Previous</button>
+            <span id="episodeInfo">Episode 1 of 19</span>
+            <button id="nextBtn" onclick="nextEpisode()">Next ▶</button>
+        </div>
+
+        <div class="content">
+            <div class="video-section">
+                <h2>Video Clip</h2>
+                <video id="videoPlayer" controls>
+                    <source id="videoSource" src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-info">
+                    <p><strong>Duration:</strong> <span id="duration"></span> seconds</p>
+                    <p><strong>Time Range:</strong> <span id="timeRange"></span></p>
+                    <p><strong>Fixation IDs:</strong> <span id="fixationIds"></span></p>
+                </div>
+            </div>
+
+            <div class="objects-section">
+                <div class="representative-object">
+                    <h3>Representative Object (Gaze Target)</h3>
+                    <div id="representativeObject" class="object-card"></div>
+                </div>
+
+                <div class="other-objects">
+                    <h3>Other Objects in Cropped Area</h3>
+                    <div id="otherObjectsCropped" class="objects-grid"></div>
+                </div>
+
+                <div class="outside-objects">
+                    <h3>Objects Outside Field of View</h3>
+                    <div id="objectsOutsideFov" class="objects-grid"></div>
+                </div>
+            </div>
+
+            <div class="captions-section">
+                <h3>Scene Captions</h3>
+                <div id="captions" class="captions-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

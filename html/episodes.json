@@ -1,0 +1,734 @@
+[
+  {
+    "id": 1,
+    "start_time": 8.416666666666666,
+    "end_time": 13.416666666666666,
+    "duration": 5.0,
+    "fixation_ids": "[0, 1]",
+    "clip_filename": "episode_01.mp4",
+    "representative_object": {
+      "object_identity": "pot",
+      "detailed_caption": "The pot is black with a lid on it. It is positioned on the stove, likely being used for cooking."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "kettle",
+        "detailed_caption": "The kettle is gray and sits on the stove next to the pot. It has a handle and spout for pouring."
+      },
+      {
+        "object_identity": "stove",
+        "detailed_caption": "The stove is white with control knobs on the front. It has multiple burners, some of which are occupied by pots and the kettle."
+      },
+      {
+        "object_identity": "pot",
+        "detailed_caption": "Another black pot with a lid is on the stove, positioned to the right of the exact gaze pot."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "refrigerator",
+        "detailed_caption": "A stainless steel refrigerator stands on the right side of the kitchen. It has a water dispenser on the door."
+      },
+      {
+        "object_identity": "microwave",
+        "detailed_caption": "A white microwave is mounted above the stove. It is integrated into the cabinetry."
+      },
+      {
+        "object_identity": "cabinet",
+        "detailed_caption": "White cabinets line the upper part of the kitchen wall. They have papers attached to the doors."
+      },
+      {
+        "object_identity": "counter",
+        "detailed_caption": "A light-colored counter runs along the wall beneath the cabinets. It has a few items placed on it."
+      },
+      {
+        "object_identity": "stove",
+        "detailed_caption": "A white stove is located below the microwave. It has a control panel on the right side."
+      }
+    ],
+    "captions": [
+      "The scene shows a kitchen area with a stove and several pots and pans. The stove has a kettle and pots on it, indicating preparation for cooking.",
+      "The scene shows a kitchen stove with several pots and kettles on it. The stove has a white exterior with control knobs and a digital display."
+    ]
+  },
+  {
+    "id": 2,
+    "start_time": 74.58333333333333,
+    "end_time": 79.04166666666667,
+    "duration": 4.458333333333343,
+    "fixation_ids": "[2]",
+    "clip_filename": "episode_02.mp4",
+    "representative_object": {
+      "object_identity": "pot",
+      "detailed_caption": "The pot is black and positioned under a running faucet. Water is flowing into it, causing bubbles to form on the surface."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "faucet",
+        "detailed_caption": "The faucet is metallic and positioned above the pot. Water is streaming out of it into the pot."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "sink",
+        "detailed_caption": "The sink is made of stainless steel and is positioned to the left of the pot. It has a rounded basin and is part of a double sink setup."
+      },
+      {
+        "object_identity": "counter",
+        "detailed_caption": "The counter is speckled and extends horizontally across the image. It supports the sink and faucet, and appears to be made of a composite material."
+      }
+    ],
+    "captions": [
+      "Water is being poured from a faucet into a pot. The pot is filling up with water, creating bubbles on the surface."
+    ]
+  },
+  {
+    "id": 3,
+    "start_time": 106.875,
+    "end_time": 117.08333333333331,
+    "duration": 10.208333333333314,
+    "fixation_ids": "[3, 4]",
+    "clip_filename": "episode_03.mp4",
+    "representative_object": {
+      "object_identity": "text",
+      "detailed_caption": "The text is printed in black on a yellow background. It includes headings like 'Directions' and subheadings such as 'Boiling the Water & Cooking the Pasta'. The font is clear and easy to read."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "paper",
+        "detailed_caption": "The paper is a light yellow color and serves as the background for the printed text. It appears slightly crumpled, indicating it may have been handled frequently."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "cabinet",
+        "detailed_caption": "A white cabinet is mounted on the wall. It has a smooth surface and is positioned to the left of the paper."
+      },
+      {
+        "object_identity": "cereal",
+        "detailed_caption": "A box of 'Giant Size' Oat Bran Cereal is placed on the floor next to the cabinet, partially visible."
+      }
+    ],
+    "captions": [
+      "The video clip shows a close-up of a recipe card with instructions for boiling water and cooking pasta. The focus is on the text, which provides step-by-step guidance.",
+      "The scene shows a close-up of a printed recipe or instructions, likely in a kitchen setting. The focus is on the text, suggesting someone is reading the instructions."
+    ]
+  },
+  {
+    "id": 4,
+    "start_time": 142.79166666666666,
+    "end_time": 155.20833333333334,
+    "duration": 12.416666666666686,
+    "fixation_ids": "[5, 6, 7, 8]",
+    "clip_filename": "episode_04.mp4",
+    "representative_object": {
+      "object_identity": "tomato",
+      "detailed_caption": "The tomato is red and appears ripe. It is being held by a hand and is being sliced in half with a knife."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "knife",
+        "detailed_caption": "The knife is metallic and is positioned vertically, slicing through the tomato."
+      },
+      {
+        "object_identity": "plate",
+        "detailed_caption": "The plate is white with a dark rim and is positioned underneath the tomato."
+      },
+      {
+        "object_identity": "tomato",
+        "detailed_caption": "Another tomato half is visible on the plate, positioned to the right of the one being sliced. It is also red and appears juicy."
+      },
+      {
+        "object_identity": "cutting board",
+        "detailed_caption": "The cutting board is underneath the tomato. It is light-colored and provides a clean surface for cutting."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "curtain",
+        "detailed_caption": "A light-colored curtain hangs on the left side of the image. It appears to be partially drawn, covering the upper part of the scene."
+      },
+      {
+        "object_identity": "floor",
+        "detailed_caption": "The floor is covered with a speckled, textured material. It extends across the bottom and right side of the image."
+      },
+      {
+        "object_identity": "plate",
+        "detailed_caption": "A white plate with a black rim is placed on the countertop. It holds a partially sliced tomato."
+      },
+      {
+        "object_identity": "countertop",
+        "detailed_caption": "A speckled brown countertop extends across the scene. It provides a surface for the plate and other items."
+      },
+      {
+        "object_identity": "counter",
+        "detailed_caption": "The counter is made of speckled granite and occupies the majority of the background. It is positioned horizontally across the image."
+      }
+    ],
+    "captions": [
+      "A person is cutting a tomato on a plate. The tomato is being sliced in half with a knife.",
+      "A person is slicing tomatoes on a plate. The tomatoes are being cut into halves with a knife.",
+      "A person is cutting a tomato on a cutting board. The tomato is being sliced into smaller pieces.",
+      "A person is slicing tomatoes on a plate. The tomatoes are being cut into halves and quarters."
+    ]
+  },
+  {
+    "id": 5,
+    "start_time": 181.9583333333333,
+    "end_time": 215.04166666666663,
+    "duration": 33.08333333333334,
+    "fixation_ids": "[9, 10, 11]",
+    "clip_filename": "episode_05.mp4",
+    "representative_object": {
+      "object_identity": "tomato",
+      "detailed_caption": "The tomato is being sliced with a knife. It is bright red and appears fresh."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "knife",
+        "detailed_caption": "The knife is being used to cut the tomato. It is positioned in the person's hand."
+      },
+      {
+        "object_identity": "plate",
+        "detailed_caption": "The plate is white with a black rim. It holds the tomatoes being sliced."
+      },
+      {
+        "object_identity": "tomato",
+        "detailed_caption": "Another tomato slice is visible to the left of the main tomato. It is also red and appears freshly cut."
+      },
+      {
+        "object_identity": "cutting board",
+        "detailed_caption": "The cutting board is white with a dark blue rim. It provides a stable surface for slicing the tomato."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "counter",
+        "detailed_caption": "The counter has a speckled pattern and extends across the bottom of the image. It supports the plate with the tomato and knife."
+      },
+      {
+        "object_identity": "curtain",
+        "detailed_caption": "The curtain is light-colored and covers the upper part of the image. It hangs down, partially obscuring the background."
+      },
+      {
+        "object_identity": "pan",
+        "detailed_caption": "A metal pan with a black handle is positioned on the left side of the counter. It appears to be placed upside down near the edge of the countertop."
+      },
+      {
+        "object_identity": "lid",
+        "detailed_caption": "A metallic lid is positioned on the left side of the counter. It appears to be from a pot or pan, with a slightly curved shape and a small knob on the edge."
+      }
+    ],
+    "captions": [
+      "A person is slicing a tomato on a plate. The focus is on the cutting action and the tomatoes.",
+      "A person is slicing tomatoes on a cutting board. The tomatoes are being cut into small pieces with a knife.",
+      "A person is slicing a tomato on a cutting board. The tomato is being cut into small pieces."
+    ]
+  },
+  {
+    "id": 6,
+    "start_time": 237.04166666666663,
+    "end_time": 239.41666666666663,
+    "duration": 2.375,
+    "fixation_ids": "[12]",
+    "clip_filename": "episode_06.mp4",
+    "representative_object": {
+      "object_identity": "menu",
+      "detailed_caption": "The menu is printed on a yellowish paper with black text. It provides instructions for cooking pasta and making a salad, including details on boiling water and adding vegetables."
+    },
+    "other_objects_in_cropped_area": [],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "wall",
+        "detailed_caption": "The wall is light-colored and serves as the background for the menu. It appears smooth and evenly lit."
+      }
+    ],
+    "captions": [
+      "The video clip shows a close-up of a printed menu, focusing on the section describing how to cook pasta and prepare a salad."
+    ]
+  },
+  {
+    "id": 7,
+    "start_time": 256.125,
+    "end_time": 259.5833333333333,
+    "duration": 3.4583333333333144,
+    "fixation_ids": "[13]",
+    "clip_filename": "episode_07.mp4",
+    "representative_object": {
+      "object_identity": "pepper",
+      "detailed_caption": "The green bell pepper is being held by a hand and is being cut with a knife. It is partially sliced, revealing its inner sections."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "plate",
+        "detailed_caption": "The plate is white with a decorative border and is placed on the kitchen counter. It holds the pepper and some sliced tomatoes."
+      },
+      {
+        "object_identity": "tomato",
+        "detailed_caption": "Sliced pieces of tomato are on the plate next to the pepper. They are red and appear freshly cut."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "curtain",
+        "detailed_caption": "A white curtain hangs in the background, covering the upper part of the scene. It appears to be slightly wrinkled and extends across the width of the frame."
+      },
+      {
+        "object_identity": "counter",
+        "detailed_caption": "A speckled counter surface occupies the lower part of the scene. It has a textured appearance and provides a base for the plate and other items."
+      }
+    ],
+    "captions": [
+      "A person is preparing vegetables on a kitchen counter. They are cutting a green bell pepper on a plate."
+    ]
+  },
+  {
+    "id": 8,
+    "start_time": 377.0,
+    "end_time": 381.0416666666667,
+    "duration": 4.041666666666686,
+    "fixation_ids": "[14]",
+    "clip_filename": "episode_08.mp4",
+    "representative_object": {
+      "object_identity": "cucumber",
+      "detailed_caption": "The cucumber is green with a bumpy texture. It is being held by a hand and partially sliced by a knife."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "knife",
+        "detailed_caption": "The knife has a metal blade and is positioned to cut the cucumber. It is held by the other hand."
+      },
+      {
+        "object_identity": "plate",
+        "detailed_caption": "The plate is white with a dark rim. It is placed on a textured surface and holds the sliced cucumber pieces."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "lid",
+        "detailed_caption": "A metallic lid with a black knob is positioned on the left side of the counter. It is partially covering a pot or pan."
+      }
+    ],
+    "captions": [
+      "A person is slicing a cucumber on a plate with a knife. The cucumber is being cut into pieces."
+    ]
+  },
+  {
+    "id": 9,
+    "start_time": 410.6666666666667,
+    "end_time": 476.0416666666667,
+    "duration": 65.375,
+    "fixation_ids": "[15, 16, 17, 18, 19, 20, 21]",
+    "clip_filename": "episode_09.mp4",
+    "representative_object": {
+      "object_identity": "cucumber",
+      "detailed_caption": "The cucumber is green and elongated, being sliced by a knife. It appears fresh and has a slightly bumpy texture."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "knife",
+        "detailed_caption": "The knife has a metallic blade and is positioned near the top of the leaf. It is being used to cut or prepare the leaf."
+      },
+      {
+        "object_identity": "plate",
+        "detailed_caption": "The plate is partially visible underneath the cucumber, with a white surface and a dark rim."
+      },
+      {
+        "object_identity": "onion",
+        "detailed_caption": "There are slices of onion on the plate. They are positioned near the cucumber and are partially visible."
+      },
+      {
+        "object_identity": "egg",
+        "detailed_caption": "The boiled egg is placed on the plate. It is white and round, located near the cucumber slices."
+      },
+      {
+        "object_identity": "tomato",
+        "detailed_caption": "The tomato is cut into pieces. It is red and placed near the cucumber and egg on the plate."
+      },
+      {
+        "object_identity": "cucumbers",
+        "detailed_caption": "Sliced cucumbers are on the plate next to the vegetable. They are green with white interiors."
+      },
+      {
+        "object_identity": "cucumber",
+        "detailed_caption": "Cucumber slices are placed on the plate next to the onion. They are cut into semi-circular pieces."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "lid",
+        "detailed_caption": "A metal lid with a black knob is placed on the counter. It is positioned to the left of the main activity area."
+      },
+      {
+        "object_identity": "meat",
+        "detailed_caption": "Slices of meat are visible on the plate. They are located near the center but slightly to the right."
+      },
+      {
+        "object_identity": "counter",
+        "detailed_caption": "The scene takes place on a speckled countertop. The surface extends across the background and foreground."
+      },
+      {
+        "object_identity": "pan",
+        "detailed_caption": "A metal pan with a black handle is positioned on the left side of the counter. It appears to be empty and is placed near the edge of the countertop."
+      },
+      {
+        "object_identity": "plate",
+        "detailed_caption": "A white plate with a blue rim is placed on the counter. It holds a partially sliced melon."
+      },
+      {
+        "object_identity": "melon",
+        "detailed_caption": "A green melon with a white patch is on the right side of the counter. It is partially sliced and positioned next to the plate."
+      },
+      {
+        "object_identity": "avocado",
+        "detailed_caption": "An avocado with a dark green, bumpy skin is placed on the right side of the counter. It is near the edge, close to the plate."
+      }
+    ],
+    "captions": [
+      "A person is preparing a dish using large green leaves, possibly for wrapping or cooking. The leaves are being held and cut with a knife.",
+      "A person is cutting a cucumber on a countertop. The focus is on the hands and the knife slicing through the cucumber.",
+      "A person is cutting a cucumber on a plate. The cucumber is partially peeled and being sliced with a knife.",
+      "A person is slicing a cucumber on a plate with a knife. The plate also contains other food items like tomatoes and boiled eggs.",
+      "A person is preparing food on a plate. They are cutting a piece of melon with a knife.",
+      "A person is slicing a white vegetable on a plate. The plate also contains sliced cucumbers.",
+      "A person is slicing an onion on a plate. The focus is on the hands and the onion being cut."
+    ]
+  },
+  {
+    "id": 10,
+    "start_time": 534.6666666666666,
+    "end_time": 538.9166666666666,
+    "duration": 4.25,
+    "fixation_ids": "[22]",
+    "clip_filename": "episode_10.mp4",
+    "representative_object": {
+      "object_identity": "vegetable",
+      "detailed_caption": "The vegetable appears to be a small, diced piece of cucumber. It is light green in color and is part of a larger pile of chopped vegetables."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "knife",
+        "detailed_caption": "A knife with a metal blade is positioned near the center of the plate. It is being used to chop the vegetables."
+      },
+      {
+        "object_identity": "tomato",
+        "detailed_caption": "Sliced tomatoes are located at the bottom of the plate. They are bright red and arranged in a row."
+      },
+      {
+        "object_identity": "onion",
+        "detailed_caption": "Whole slices of onion are placed near the top of the plate. They are white and round in shape."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "lid",
+        "detailed_caption": "A metallic lid with a black knob is placed on the counter to the left of the plate. It appears to be part of a pot or pan."
+      },
+      {
+        "object_identity": "seaweed",
+        "detailed_caption": "A piece of seaweed is positioned on the right side of the plate, partially visible with a white, fluffy texture on top."
+      }
+    ],
+    "captions": [
+      "A person is preparing vegetables on a plate. The focus is on chopping and arranging the vegetables."
+    ]
+  },
+  {
+    "id": 11,
+    "start_time": 643.5416666666666,
+    "end_time": 645.5833333333334,
+    "duration": 2.0416666666667425,
+    "fixation_ids": "[23]",
+    "clip_filename": "episode_11.mp4",
+    "representative_object": {
+      "object_identity": "soup",
+      "detailed_caption": "The soup is a light brown color, with visible chunks of vegetables. It is bubbling gently, indicating it is being cooked."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "spoon",
+        "detailed_caption": "A black slotted spoon is being used to stir the soup. It is positioned in the center of the pot."
+      },
+      {
+        "object_identity": "pot",
+        "detailed_caption": "The pot is metallic and sits on a stove. It contains the soup and is slightly steaming."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "stove",
+        "detailed_caption": "The stove has a digital display showing the time and temperature settings. It is located on the left side of the image."
+      },
+      {
+        "object_identity": "pan",
+        "detailed_caption": "A pan is positioned on the top left burner of the stove. It appears to be empty and unused."
+      },
+      {
+        "object_identity": "lid",
+        "detailed_caption": "A lid is placed on the pot to the right of the masked area. It is slightly tilted, allowing steam to escape."
+      }
+    ],
+    "captions": [
+      "A pot of soup is being stirred on a stove. The soup appears to be boiling, and a slotted spoon is being used to stir it."
+    ]
+  },
+  {
+    "id": 12,
+    "start_time": 800.625,
+    "end_time": 803.6666666666666,
+    "duration": 3.0416666666666288,
+    "fixation_ids": "[24]",
+    "clip_filename": "episode_12.mp4",
+    "representative_object": {
+      "object_identity": "pot",
+      "detailed_caption": "The pot is filled with a bubbling, yellowish liquid, likely a soup or stew. The contents are actively boiling, creating a frothy surface."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "spoon",
+        "detailed_caption": "A black slotted spoon is partially submerged in the pot. It is positioned diagonally, with the handle resting on the edge of the pot."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "stove",
+        "detailed_caption": "The stove has a digital display showing the time. It is located to the left of the pot."
+      },
+      {
+        "object_identity": "pan",
+        "detailed_caption": "A pan with a lid is positioned on the right side of the stove, near the pot."
+      }
+    ],
+    "captions": [
+      "A pot of soup is boiling on a stove. A black slotted spoon is resting inside the pot."
+    ]
+  },
+  {
+    "id": 13,
+    "start_time": 883.0833333333334,
+    "end_time": 889.0833333333334,
+    "duration": 6.0,
+    "fixation_ids": "[25, 26]",
+    "clip_filename": "episode_13.mp4",
+    "representative_object": {
+      "object_identity": "pot",
+      "detailed_caption": "The pot is filled with a bubbling liquid, likely boiling. The contents are a light brown color, indicating it might be a soup or broth. The pot is placed on a red-hot stove burner."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "spoon",
+        "detailed_caption": "A black slotted spoon is partially submerged in the pot. It is positioned near the edge of the pot, likely being used to stir or serve the contents."
+      },
+      {
+        "object_identity": "spatula",
+        "detailed_caption": "The slotted spatula is black with metal slots. It is positioned inside the pot, stirring the boiling liquid."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "pan",
+        "detailed_caption": "A black frying pan is positioned on the left side of the stove. It appears to be empty and is not in use."
+      },
+      {
+        "object_identity": "kettle",
+        "detailed_caption": "A speckled kettle is placed on the back left of the stove. It has a black handle and spout."
+      },
+      {
+        "object_identity": "stove",
+        "detailed_caption": "The stove is a black electric model with multiple burners. It has a digital display showing the time."
+      },
+      {
+        "object_identity": "pot",
+        "detailed_caption": "A large pot with a lid is on the right side of the stove. It is emitting steam, indicating it is being used for cooking."
+      }
+    ],
+    "captions": [
+      "A pot of boiling liquid is on a stove. The liquid appears to be simmering with bubbles rising to the surface.",
+      "A pot of boiling liquid is on a stove. A slotted spatula is being used to stir the contents."
+    ]
+  },
+  {
+    "id": 14,
+    "start_time": 911.25,
+    "end_time": 913.8333333333334,
+    "duration": 2.5833333333333712,
+    "fixation_ids": "[27]",
+    "clip_filename": "episode_14.mp4",
+    "representative_object": {
+      "object_identity": "pot",
+      "detailed_caption": "The pot is filled with boiling liquid, creating bubbles on the surface. It is placed on a stove burner, which is turned on and glowing red."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "spatula",
+        "detailed_caption": "The spatula is partially submerged in the boiling liquid. It is positioned horizontally across the pot."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "kettle",
+        "detailed_caption": "A speckled kettle with a black handle sits on the stove. It is positioned to the left of the pot."
+      },
+      {
+        "object_identity": "pan",
+        "detailed_caption": "A black frying pan is placed on the stove. It is located to the left of the kettle."
+      },
+      {
+        "object_identity": "spoon",
+        "detailed_caption": "A black spoon rests on the stove. It is positioned to the right of the pot."
+      }
+    ],
+    "captions": [
+      "A pot is boiling on a stove with a spatula inside. Steam is rising from the pot, indicating that the contents are being cooked."
+    ]
+  },
+  {
+    "id": 15,
+    "start_time": 976.75,
+    "end_time": 978.7916666666666,
+    "duration": 2.0416666666666288,
+    "fixation_ids": "[28]",
+    "clip_filename": "episode_15.mp4",
+    "representative_object": {
+      "object_identity": "pot",
+      "detailed_caption": "The pot is filled with boiling liquid, creating bubbles and steam. It appears to be made of metal and is placed on a burner."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "spoon",
+        "detailed_caption": "The slotted spoon is partially submerged in the boiling liquid. It is positioned horizontally across the pot."
+      },
+      {
+        "object_identity": "stove",
+        "detailed_caption": "The stove has a visible red-hot burner underneath the pot. It provides the heat necessary for boiling the liquid."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "pan",
+        "detailed_caption": "A black frying pan is positioned on the left side of the stove. It appears to be empty and is placed on a burner."
+      },
+      {
+        "object_identity": "pot",
+        "detailed_caption": "A black pot with a silver lid is located on the right side of the stove. The lid has a black knob on top."
+      },
+      {
+        "object_identity": "kettle",
+        "detailed_caption": "A speckled kettle is placed at the back center of the stove. It has a black handle and spout."
+      }
+    ],
+    "captions": [
+      "A pot is boiling on a stove with a slotted spoon inside. Steam is rising from the pot, indicating that the contents are hot."
+    ]
+  },
+  {
+    "id": 16,
+    "start_time": 1109.125,
+    "end_time": 1112.0416666666667,
+    "duration": 2.9166666666667425,
+    "fixation_ids": "[29]",
+    "clip_filename": "episode_16.mp4",
+    "representative_object": {
+      "object_identity": "spoon",
+      "detailed_caption": "The slotted spoon is black with evenly spaced slots. It is partially submerged in the boiling water."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "pot",
+        "detailed_caption": "The pot is metallic and filled with boiling water. It is positioned on the stove."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "pan",
+        "detailed_caption": "A black frying pan is positioned on the left side of the stove. It appears to be empty and is placed on a burner."
+      },
+      {
+        "object_identity": "kettle",
+        "detailed_caption": "A speckled kettle is located at the top center of the stove. It is positioned behind the pot and pan."
+      }
+    ],
+    "captions": [
+      "A pot of water is boiling on a stove. A slotted spoon is submerged in the pot."
+    ]
+  },
+  {
+    "id": 17,
+    "start_time": 1186.9583333333333,
+    "end_time": 1191.0416666666667,
+    "duration": 4.083333333333485,
+    "fixation_ids": "[30]",
+    "clip_filename": "episode_17.mp4",
+    "representative_object": {
+      "object_identity": "pot",
+      "detailed_caption": "The pot is filled with a bubbling, light brown liquid. It appears to be made of metal and is placed on a stove burner."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "spoon",
+        "detailed_caption": "A black slotted spoon is partially submerged in the pot. It is positioned horizontally, stirring the boiling liquid."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "pan",
+        "detailed_caption": "A black frying pan is positioned on the left side of the stove. It appears empty and is placed on a burner that is not in use."
+      },
+      {
+        "object_identity": "kettle",
+        "detailed_caption": "A speckled kettle is located at the top left corner of the stove. It is placed on a burner that is not in use."
+      },
+      {
+        "object_identity": "pot",
+        "detailed_caption": "A large pot with a lid is situated on the right side of the stove. The lid has a black handle on top."
+      }
+    ],
+    "captions": [
+      "A pot of boiling liquid is on the stove. A slotted spoon is being used to stir the contents."
+    ]
+  },
+  {
+    "id": 18,
+    "start_time": 1484.6666666666667,
+    "end_time": 1497.0416666666667,
+    "duration": 12.375,
+    "fixation_ids": "[31, 32]",
+    "clip_filename": "episode_18.mp4",
+    "representative_object": {
+      "object_identity": "cabinet",
+      "detailed_caption": "The cabinet has a smooth, light-colored surface with a rectangular shape. It appears to be part of a larger set of kitchen cabinets."
+    },
+    "other_objects_in_cropped_area": [
+      {
+        "object_identity": "microwave",
+        "detailed_caption": "The microwave is located below the cabinet, with a similar light-colored exterior. It is positioned to the right of the gaze point."
+      },
+      {
+        "object_identity": "cabinet",
+        "detailed_caption": "The cabinet is located above the countertop. It has a light-colored exterior and is partially visible in the frame."
+      }
+    ],
+    "other_objects_outside_fov": [
+      {
+        "object_identity": "refrigerator",
+        "detailed_caption": "A refrigerator is positioned to the right of the stove. It has a sleek, modern design with a handle on the right side."
+      },
+      {
+        "object_identity": "counter",
+        "detailed_caption": "A counter runs along the wall beneath the cabinets. It holds various kitchen items, including a kettle and some bowls."
+      },
+      {
+        "object_identity": "oven",
+        "detailed_caption": "An oven is situated below the microwave. It has a stovetop with burners and a digital display on the front."
+      },
+      {
+        "object_identity": "floor",
+        "detailed_caption": "The floor is visible in the lower right corner, showing a wooden texture with a warm tone. It appears to be part of the room's interior, extending towards the background."
+      }
+    ],
+    "captions": [
+      "The scene shows a section of a kitchen with cabinets and a microwave. The lighting is dim, creating a warm ambiance.",
+      "The scene appears to be in a kitchen with a focus on a countertop area. The person's gaze is directed towards a specific object on the counter."
+    ]
+  }
+]

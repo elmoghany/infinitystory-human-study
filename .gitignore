@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local test files
+*.local.*
+test_server.py
+README.old.md
+config.js
+
+# Excel files (backups)
+*.xlsx
+~$*.xlsx
+
+# Logs
+*.log
+
+# Video clips (exclude from git but keep directory structure)
+html/clips/**/*.mp4
+html/clips/**/*.avi
+html/clips/**/*.mov
+html/clips/**/*.webm
+
+# But keep the directory structure with .gitkeep files
+!html/clips/**/.gitkeep
+

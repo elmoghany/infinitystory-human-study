@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Annotation Tool - Human Evaluation</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.2em;
+    opacity: 0.9;
+}
+
+.navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navigation button {
+    padding: 10px 20px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.navigation button:hover {
+    background: #5a6fd8;
+}
+
+.navigation button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+#episodeInfo {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.video-section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.video-section h2 {
+    margin-bottom: 15px;
+    color: #667eea;
+}
+
+#videoPlayer {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.video-info {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.video-info p {
+    margin-bottom: 8px;
+}
+
+.objects-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.representative-object,
+.other-objects,
+.outside-objects {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.representative-object h3 {
+    color: #e74c3c;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.other-objects h3 {
+    color: #f39c12;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.outside-objects h3 {
+    color: #95a5a6;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.object-card {
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #e74c3c;
+}
+
+.objects-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.object-item {
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 3px solid #f39c12;
+}
+
+.outside-object-item {
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 3px solid #95a5a6;
+}
+
+.object-name {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.object-description {
+    color: #555;
+    font-size: 0.95em;
+}
+
+.captions-section {
+    grid-column: 1 / -1;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.captions-section h3 {
+    color: #27ae60;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.captions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.caption-item {
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 3px solid #27ae60;
+}
+
+@media (max-width: 1200px) {
+    .content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    header h1 {
+        font-size: 2em;
+    }
+    
+    .navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+
+/* Enhanced styles for exclusion functionality */
+.standalone-info {
+    background: #e8f5e8;
+    border: 1px solid #4caf50;
+    color: #2e7d32;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.export-section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.export-section h3 {
+    color: #667eea;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.export-stats {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.export-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.export-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.csv-btn {
+    background: #28a745;
+    color: white;
+}
+
+.csv-btn:hover {
+    background: #218838;
+}
+
+.excel-btn {
+    background: #17a2b8;
+    color: white;
+}
+
+.excel-btn:hover {
+    background: #138496;
+}
+
+.object-card-container {
+    position: relative;
+}
+
+.object-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.exclude-btn {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    transition: all 0.3s;
+    min-width: 60px;
+}
+
+.exclude-btn.exclude {
+    background: #dc3545;
+    color: white;
+}
+
+.exclude-btn.exclude:hover {
+    background: #c82333;
+}
+
+.exclude-btn.include {
+    background: #28a745;
+    color: white;
+}
+
+.exclude-btn.include:hover {
+    background: #218838;
+}
+
+.excluded-object {
+    opacity: 0.6;
+    background: #f8f9fa !important;
+}
+
+.excluded-object .object-name {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+.excluded-object .object-description {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+.exclusion-reason {
+    margin-top: 10px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.exclusion-reason textarea {
+    width: 100%;
+    min-height: 60px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 5px;
+    font-size: 12px;
+    resize: vertical;
+}
+
+.exclusion-reason label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 11px;
+    color: #495057;
+}
+
+.file-size-warning {
+    background: #fff3e0;
+    border: 1px solid #ff9800;
+    color: #e65100;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 0.9em;
+}
+    </style>
+    
+    <!-- SheetJS library for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="standalone-info">
+            📦 Enhanced Standalone Version - Auto-saves CSV backup to browser every 30 seconds
+            | Export both CSV & Excel formats anytime
+        </div>
+        
+        
+        
+        <header>
+            <h1>Video Annotation Tool</h1>
+            <p>Human Evaluation & Quality Control</p>
+        </header>
+
+        <div class="export-section">
+            <h3>📊 Data Export & Quality Control</h3>
+            <div class="export-stats" id="exportStats">
+                Loading statistics...
+            </div>
+            <div class="export-buttons">
+                <button onclick="exportToCSV()" class="export-btn csv-btn">
+                    📄 Export CSV
+                </button>
+                <button onclick="exportToExcel()" class="export-btn excel-btn">
+                    📊 Export Excel
+                </button>
+                <button onclick="exportBoth()" class="export-btn" style="background: #6f42c1; color: white;">
+                    📦 Export Both (CSV + Excel)
+                </button>
+                <button onclick="syncToGoogleSheets()" class="export-btn" style="background: #17a2b8; color: white;">
+                    ☁️ Sync Now
+                </button>
+                <button onclick="changeAnnotator()" class="export-btn" style="background: #6c757d; color: white;">
+                    👤 Change Name
+                </button>
+                <button onclick="resetAllExclusions()" class="export-btn" style="background: #ffc107; color: #212529;">
+                    🔄 Reset All
+                </button>
+            </div>
+            <div id="lastSaved" style="margin-top: 10px; font-size: 0.85em; color: #666; font-style: italic;">
+                Auto-save: Not yet saved
+            </div>
+            <div id="annotatorInfo" style="margin-top: 5px; font-size: 0.85em; color: #666;">
+                Annotator: <span id="annotatorName">Not set</span> | Session: <span id="sessionIdDisplay">-</span>
+            </div>
+            <div id="syncStatus" style="margin-top: 5px; font-size: 0.85em; color: #666;">
+                <span id="syncIndicator">🔄</span> <span id="syncMessage">Google Sheets: Not configured</span>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button id="prevBtn" onclick="previousEpisode()">◀ Previous</button>
+            <span id="episodeInfo">Episode 1 of 18</span>
+            <button id="nextBtn" onclick="nextEpisode()">Next ▶</button>
+        </div>
+
+        <div class="content">
+            <div class="video-section">
+                <h2>Video Clip</h2>
+                <video id="videoPlayer" controls>
+                    <source id="videoSource" src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-info">
+                    <p><strong>Duration:</strong> <span id="duration"></span> seconds</p>
+                    <p><strong>Time Range:</strong> <span id="timeRange"></span></p>
+                    <p><strong>Fixation IDs:</strong> <span id="fixationIds"></span></p>
+                </div>
+            </div>
+
+            <div class="objects-section">
+                <div class="representative-object">
+                    <h3>Representative Object (Primary Focus)</h3>
+                    <div id="representativeObject" class="object-card"></div>
+                </div>
+
+                <div class="other-objects">
+                    <h3>Other Objects in Cropped Area</h3>
+                    <div id="otherObjectsCropped" class="objects-grid"></div>
+                </div>
+
+                <div class="outside-objects">
+                    <h3>Objects Outside Field of View</h3>
+                    <div id="objectsOutsideFov" class="objects-grid"></div>
+                </div>
+            </div>
+
+            <div class="captions-section">
+                <h3>Scene Captions</h3>
+                <div id="captions" class="captions-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+// ==========================================
+// GOOGLE SHEETS CONFIGURATION
+// ==========================================
+// This will be replaced by GitHub Actions during deployment
+// Secret name in GitHub: GOOGLE_SHEETS_URL
+const GOOGLE_SHEETS_URL = '{{GOOGLE_SHEETS_URL}}';
+const ENABLE_GOOGLE_SHEETS = true; // ✅ ENABLED - Auto-sync active!
+
+// ==========================================
+// Global variables
+// ==========================================
+let episodeData = [];
+let videoData = {};
+let currentEpisodeIndex = 0;
+
+// User session information
+let annotatorName = '';
+let sessionId = generateSessionId();
+
+// Sync queue for offline support
+let syncQueue = [];
+let isSyncing = false;
+let lastSyncTime = null;
+
+// Exclusion data structure
+let exclusionData = {
+    metadata: {
+        exportVersion: "1.0",
+        lastModified: null,
+        totalEpisodes: 18,
+        annotatorName: '',
+        sessionId: '',
+        userNotes: ""
+    },
+    episodes: {}
+};
+
+// ==========================================
+// Session Management
+// ==========================================
+function generateSessionId() {
+    return 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+}
+
+function initializeUserSession() {
+    // Check if annotator name is stored
+    let storedName = localStorage.getItem('annotator_name');
+    
+    if (!storedName) {
+        storedName = prompt('Please enter your name or ID for tracking:', '');
+        if (storedName) {
+            localStorage.setItem('annotator_name', storedName);
+        }
+    }
+    
+    annotatorName = storedName || 'Anonymous';
+    exclusionData.metadata.annotatorName = annotatorName;
+    exclusionData.metadata.sessionId = sessionId;
+    
+    // Display annotator info
+    updateAnnotatorDisplay();
+    
+    console.log('Session initialized:', { annotatorName, sessionId });
+}
+
+function updateAnnotatorDisplay() {
+    const nameElement = document.getElementById('annotatorName');
+    const sessionElement = document.getElementById('sessionIdDisplay');
+    
+    if (nameElement) nameElement.textContent = annotatorName;
+    if (sessionElement) sessionElement.textContent = sessionId.substr(-8);
+}
+
+function changeAnnotator() {
+    const newName = prompt('Enter your name or ID:', annotatorName);
+    if (newName && newName !== annotatorName) {
+        annotatorName = newName;
+        localStorage.setItem('annotator_name', newName);
+        exclusionData.metadata.annotatorName = newName;
+        updateAnnotatorDisplay();
+        saveExclusionData();
+    }
+}
+
+// ==========================================
+// Google Sheets Integration
+// ==========================================
+function syncToGoogleSheets() {
+    if (!ENABLE_GOOGLE_SHEETS) {
+        updateSyncStatus('⚙️', 'Google Sheets: Disabled', '#999');
+        return Promise.resolve();
+    }
+    
+    if (!GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+        updateSyncStatus('⚠️', 'Google Sheets: Not configured', '#ff9800');
+        return Promise.resolve();
+    }
+    
+    if (isSyncing) {
+        console.log('Sync already in progress, skipping...');
+        return Promise.resolve();
+    }
+    
+    isSyncing = true;
+    updateSyncStatus('🔄', 'Syncing to Google Sheets...', '#17a2b8');
+    
+    const dataToSync = {
+        annotatorName: annotatorName,
+        sessionId: sessionId,
+        timestamp: new Date().toISOString(),
+        episodes: exclusionData.episodes
+    };
+    
+    return fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Required for Google Apps Script
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSync)
+    })
+    .then(() => {
+        lastSyncTime = new Date();
+        const timeStr = lastSyncTime.toLocaleTimeString();
+        updateSyncStatus('✅', `Synced at ${timeStr}`, '#28a745');
+        console.log('Successfully synced to Google Sheets');
+        isSyncing = false;
+        return true;
+    })
+    .catch(error => {
+        console.error('Error syncing to Google Sheets:', error);
+        updateSyncStatus('❌', 'Sync failed - saved locally', '#dc3545');
+        isSyncing = false;
+        
+        // Add to queue for retry
+        syncQueue.push(dataToSync);
+        return false;
+    });
+}
+
+function updateSyncStatus(indicator, message, color) {
+    const indicatorElement = document.getElementById('syncIndicator');
+    const messageElement = document.getElementById('syncMessage');
+    
+    if (indicatorElement) indicatorElement.textContent = indicator;
+    if (messageElement) {
+        messageElement.textContent = message;
+        messageElement.style.color = color;
+    }
+}
+
+function retrySyncQueue() {
+    if (syncQueue.length > 0 && !isSyncing && navigator.onLine) {
+        console.log(`Retrying ${syncQueue.length} queued syncs...`);
+        syncToGoogleSheets().then(() => {
+            if (lastSyncTime) {
+                syncQueue = []; // Clear queue on success
+            }
+        });
+    }
+}
+
+// Check connection status
+window.addEventListener('online', function() {
+    console.log('Connection restored, retrying sync...');
+    updateSyncStatus('🔄', 'Connection restored, syncing...', '#17a2b8');
+    retrySyncQueue();
+});
+
+window.addEventListener('offline', function() {
+    console.log('Connection lost, will sync when back online');
+    updateSyncStatus('📴', 'Offline - will sync when online', '#ffc107');
+});
+
+// Initialize exclusion data for all episodes
+function initializeExclusionData() {
+    episodeData.forEach(episode => {
+        if (!exclusionData.episodes[episode.id]) {
+            exclusionData.episodes[episode.id] = {
+                representative: {
+                    excluded: false,
+                    reason: "",
+                    timestamp: null,
+                    notes: "",
+                    objectIdentity: episode.representative_object?.object_identity || "Unknown"
+                },
+                cropped: episode.other_objects_in_cropped_area?.map((obj, index) => ({
+                    index: index,
+                    objectIdentity: obj.object_identity || "Unknown",
+                    excluded: false,
+                    reason: "",
+                    timestamp: null,
+                    notes: ""
+                })) || [],
+                outside: episode.other_objects_outside_fov?.map((obj, index) => ({
+                    index: index,
+                    objectIdentity: obj.object_identity || "Unknown",
+                    excluded: false,
+                    reason: "",
+                    timestamp: null,
+                    notes: ""
+                })) || []
+            };
+        }
+    });
+    
+    // Load saved data from localStorage
+    loadExclusionData();
+    updateExportStats();
+}
+
+// Save exclusion data to localStorage
+function saveExclusionData() {
+    exclusionData.metadata.lastModified = new Date().toISOString();
+    exclusionData.metadata.annotatorName = annotatorName;
+    exclusionData.metadata.sessionId = sessionId;
+    
+    localStorage.setItem('annotation_data_v1', JSON.stringify(exclusionData));
+    
+    // Also save CSV backup to localStorage
+    if (episodeData.length > 0) {
+        try {
+            const csvData = generateCSVData();
+            localStorage.setItem('csv_backup_v1', csvData);
+            
+            // Update last saved display
+            const lastSavedElement = document.getElementById('lastSaved');
+            if (lastSavedElement) {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString();
+                lastSavedElement.textContent = `Auto-save: Last saved at ${timeStr}`;
+                lastSavedElement.style.color = '#28a745';
+            }
+        } catch (error) {
+            console.error('Error saving CSV backup:', error);
+        }
+    }
+    
+    // Sync to Google Sheets
+    syncToGoogleSheets();
+}
+
+// Load exclusion data from localStorage
+function loadExclusionData() {
+    try {
+        const saved = localStorage.getItem('annotation_data_v1');
+        if (saved) {
+            const loadedData = JSON.parse(saved);
+            // Merge with current structure to handle any new episodes
+            Object.keys(loadedData.episodes || {}).forEach(episodeId => {
+                if (exclusionData.episodes[episodeId]) {
+                    exclusionData.episodes[episodeId] = loadedData.episodes[episodeId];
+                }
+            });
+            console.log('Loaded exclusion data from localStorage');
+            
+            // Update last saved display if data exists
+            if (loadedData.metadata && loadedData.metadata.lastModified) {
+                const lastSavedElement = document.getElementById('lastSaved');
+                if (lastSavedElement) {
+                    const lastModified = new Date(loadedData.metadata.lastModified);
+                    const timeStr = lastModified.toLocaleString();
+                    lastSavedElement.textContent = `Auto-save: Restored from ${timeStr}`;
+                    lastSavedElement.style.color = '#17a2b8';
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error loading exclusion data:', error);
+    }
+}
+
+// Download CSV backup from localStorage
+function downloadCSVBackup() {
+    try {
+        const csvBackup = localStorage.getItem('csv_backup_v1');
+        if (csvBackup) {
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+            const filename = `csv_backup_${timestamp}.csv`;
+            downloadFile(csvBackup, filename, 'text/csv');
+            console.log('CSV backup downloaded:', filename);
+        } else {
+            alert('No CSV backup found in browser storage.');
+        }
+    } catch (error) {
+        console.error('Error downloading CSV backup:', error);
+        alert('Error downloading CSV backup: ' + error.message);
+    }
+}
+
+// Toggle object exclusion
+function toggleObjectExclusion(episodeId, type, index) {
+    const episodeExclusions = exclusionData.episodes[episodeId];
+    if (!episodeExclusions) return;
+    
+    let targetObj;
+    if (type === 'representative') {
+        targetObj = episodeExclusions.representative;
+    } else {
+        targetObj = episodeExclusions[type][index];
+    }
+    
+    if (targetObj) {
+        targetObj.excluded = !targetObj.excluded;
+        targetObj.timestamp = new Date().toISOString();
+        
+        if (!targetObj.excluded) {
+            targetObj.reason = "";
+            targetObj.notes = "";
+        }
+        
+        saveExclusionData();
+        updateExportStats();
+        
+        // Refresh current episode display
+        displayEpisode(currentEpisodeIndex);
+    }
+}
+
+// Update exclusion reason
+function updateExclusionReason(episodeId, type, index, reason) {
+    const episodeExclusions = exclusionData.episodes[episodeId];
+    if (!episodeExclusions) return;
+    
+    let targetObj;
+    if (type === 'representative') {
+        targetObj = episodeExclusions.representative;
+    } else {
+        targetObj = episodeExclusions[type][index];
+    }
+    
+    if (targetObj) {
+        targetObj.reason = reason;
+        targetObj.timestamp = new Date().toISOString();
+        saveExclusionData();
+    }
+}
+
+// Get exclusion state
+function getExclusionState(episodeId, type, index) {
+    const episodeExclusions = exclusionData.episodes[episodeId];
+    if (!episodeExclusions) return { excluded: false, reason: "" };
+    
+    if (type === 'representative') {
+        return episodeExclusions.representative;
+    } else {
+        return episodeExclusions[type][index] || { excluded: false, reason: "" };
+    }
+}
+
+// Update export statistics
+function updateExportStats() {
+    let totalObjects = 0;
+    let excludedObjects = 0;
+    
+    Object.values(exclusionData.episodes).forEach(episode => {
+        // Count representative object
+        totalObjects++;
+        if (episode.representative.excluded) excludedObjects++;
+        
+        // Count cropped objects
+        totalObjects += episode.cropped.length;
+        excludedObjects += episode.cropped.filter(obj => obj.excluded).length;
+        
+        // Count outside objects
+        totalObjects += episode.outside.length;
+        excludedObjects += episode.outside.filter(obj => obj.excluded).length;
+    });
+    
+    const inclusionRate = totalObjects > 0 ? ((totalObjects - excludedObjects) / totalObjects * 100).toFixed(1) : 0;
+    
+    document.getElementById('exportStats').innerHTML = `
+        <strong>Quality Control Status:</strong> ${excludedObjects} objects excluded out of ${totalObjects} total 
+        | Inclusion Rate: ${inclusionRate}%
+    `;
+}
+
+// Reset all exclusions
+function resetAllExclusions() {
+    if (confirm('Are you sure you want to reset all exclusions? This cannot be undone.')) {
+        Object.values(exclusionData.episodes).forEach(episode => {
+            episode.representative.excluded = false;
+            episode.representative.reason = "";
+            episode.representative.notes = "";
+            
+            episode.cropped.forEach(obj => {
+                obj.excluded = false;
+                obj.reason = "";
+                obj.notes = "";
+            });
+            
+            episode.outside.forEach(obj => {
+                obj.excluded = false;
+                obj.reason = "";
+                obj.notes = "";
+            });
+        });
+        
+        saveExclusionData();
+        updateExportStats();
+        displayEpisode(currentEpisodeIndex);
+        alert('All exclusions have been reset.');
+    }
+}
+
+// Generate CSV data
+function generateCSVData() {
+    const headers = [
+        'Episode_ID', 'Object_Type', 'Object_Index', 'Object_Identity', 
+        'Object_Description', 'Excluded', 'Exclusion_Reason', 
+        'Timestamp', 'User_Notes', 'Episode_Start_Time', 'Episode_End_Time',
+        'Episode_Duration', 'Fixation_IDs'
+    ];
+    
+    let csvContent = headers.join(',') + '\n';
+    
+    episodeData.forEach(episode => {
+        const episodeExclusions = exclusionData.episodes[episode.id] || {};
+        
+        // Representative object
+        const repState = episodeExclusions.representative || {};
+        const repObj = episode.representative_object || {};
+        csvContent += [
+            episode.id,
+            'representative',
+            0,
+            `"${(repObj.object_identity || 'Unknown').replace(/"/g, '""')}"`,
+            `"${(repObj.detailed_caption || 'No description').replace(/"/g, '""')}"`,
+            repState.excluded || false,
+            `"${(repState.reason || '').replace(/"/g, '""')}"`,
+            repState.timestamp || '',
+            `"${(repState.notes || '').replace(/"/g, '""')}"`,
+            episode.start_time,
+            episode.end_time,
+            episode.duration,
+            `"${episode.fixation_ids || ''}"`
+        ].join(',') + '\n';
+        
+        // Cropped objects
+        (episode.other_objects_in_cropped_area || []).forEach((obj, index) => {
+            const objState = (episodeExclusions.cropped || [])[index] || {};
+            csvContent += [
+                episode.id,
+                'cropped',
+                index,
+                `"${(obj.object_identity || 'Unknown').replace(/"/g, '""')}"`,
+                `"${(obj.detailed_caption || 'No description').replace(/"/g, '""')}"`,
+                objState.excluded || false,
+                `"${(objState.reason || '').replace(/"/g, '""')}"`,
+                objState.timestamp || '',
+                `"${(objState.notes || '').replace(/"/g, '""')}"`,
+                episode.start_time,
+                episode.end_time,
+                episode.duration,
+                `"${episode.fixation_ids || ''}"`
+            ].join(',') + '\n';
+        });
+        
+        // Outside objects
+        (episode.other_objects_outside_fov || []).forEach((obj, index) => {
+            const objState = (episodeExclusions.outside || [])[index] || {};
+            csvContent += [
+                episode.id,
+                'outside',
+                index,
+                `"${(obj.object_identity || 'Unknown').replace(/"/g, '""')}"`,
+                `"${(obj.detailed_caption || 'No description').replace(/"/g, '""')}"`,
+                objState.excluded || false,
+                `"${(objState.reason || '').replace(/"/g, '""')}"`,
+                objState.timestamp || '',
+                `"${(objState.notes || '').replace(/"/g, '""')}"`,
+                episode.start_time,
+                episode.end_time,
+                episode.duration,
+                `"${episode.fixation_ids || ''}"`
+            ].join(',') + '\n';
+        });
+    });
+    
+    return csvContent;
+}
+
+// Export to CSV
+function exportToCSV() {
+    try {
+        const csvData = generateCSVData();
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+        const filename = `annotations_${timestamp}.csv`;
+        
+        downloadFile(csvData, filename, 'text/csv');
+        console.log('CSV export completed:', filename);
+    } catch (error) {
+        console.error('CSV export error:', error);
+        alert('Error exporting CSV: ' + error.message);
+    }
+}
+
+// Export to Excel
+function exportToExcel() {
+    try {
+        if (typeof XLSX === 'undefined') {
+            alert('Excel export library not loaded. Please check your internet connection.');
+            return;
+        }
+        
+        const wb = XLSX.utils.book_new();
+        
+        // Main data sheet
+        const mainData = generateExportData();
+        const ws1 = XLSX.utils.json_to_sheet(mainData);
+        XLSX.utils.book_append_sheet(wb, ws1, "Exclusion_Data");
+        
+        // Summary sheet
+        const summaryData = generateSummaryData();
+        const ws2 = XLSX.utils.json_to_sheet(summaryData);
+        XLSX.utils.book_append_sheet(wb, ws2, "Summary");
+        
+        // Statistics sheet
+        const statsData = generateStatisticsData();
+        const ws3 = XLSX.utils.json_to_sheet(statsData);
+        XLSX.utils.book_append_sheet(wb, ws3, "Statistics");
+        
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+        const filename = `annotations_${timestamp}.xlsx`;
+        
+        XLSX.writeFile(wb, filename);
+        console.log('Excel export completed:', filename);
+    } catch (error) {
+        console.error('Excel export error:', error);
+        alert('Error exporting Excel: ' + error.message);
+    }
+}
+
+// Export both CSV and Excel
+function exportBoth() {
+    try {
+        console.log('Exporting both CSV and Excel files...');
+        
+        // Export CSV first
+        exportToCSV();
+        
+        // Small delay to ensure CSV download starts, then export Excel
+        setTimeout(() => {
+            exportToExcel();
+            alert('Both CSV and Excel files have been exported! Check your downloads folder.');
+        }, 500);
+        
+    } catch (error) {
+        console.error('Export both error:', error);
+        alert('Error exporting files: ' + error.message);
+    }
+}
+
+// Generate export data for Excel
+function generateExportData() {
+    const data = [];
+    
+    episodeData.forEach(episode => {
+        const episodeExclusions = exclusionData.episodes[episode.id] || {};
+        
+        // Representative object
+        const repState = episodeExclusions.representative || {};
+        const repObj = episode.representative_object || {};
+        data.push({
+            Episode_ID: episode.id,
+            Object_Type: 'representative',
+            Object_Index: 0,
+            Object_Identity: repObj.object_identity || 'Unknown',
+            Object_Description: repObj.detailed_caption || 'No description',
+            Excluded: repState.excluded || false,
+            Exclusion_Reason: repState.reason || '',
+            Timestamp: repState.timestamp || '',
+            User_Notes: repState.notes || '',
+            Episode_Start_Time: episode.start_time,
+            Episode_End_Time: episode.end_time,
+            Episode_Duration: episode.duration,
+            Fixation_IDs: episode.fixation_ids || ''
+        });
+        
+        // Cropped objects
+        (episode.other_objects_in_cropped_area || []).forEach((obj, index) => {
+            const objState = (episodeExclusions.cropped || [])[index] || {};
+            data.push({
+                Episode_ID: episode.id,
+                Object_Type: 'cropped',
+                Object_Index: index,
+                Object_Identity: obj.object_identity || 'Unknown',
+                Object_Description: obj.detailed_caption || 'No description',
+                Excluded: objState.excluded || false,
+                Exclusion_Reason: objState.reason || '',
+                Timestamp: objState.timestamp || '',
+                User_Notes: objState.notes || '',
+                Episode_Start_Time: episode.start_time,
+                Episode_End_Time: episode.end_time,
+                Episode_Duration: episode.duration,
+                Fixation_IDs: episode.fixation_ids || ''
+            });
+        });
+        
+        // Outside objects
+        (episode.other_objects_outside_fov || []).forEach((obj, index) => {
+            const objState = (episodeExclusions.outside || [])[index] || {};
+            data.push({
+                Episode_ID: episode.id,
+                Object_Type: 'outside',
+                Object_Index: index,
+                Object_Identity: obj.object_identity || 'Unknown',
+                Object_Description: obj.detailed_caption || 'No description',
+                Excluded: objState.excluded || false,
+                Exclusion_Reason: objState.reason || '',
+                Timestamp: objState.timestamp || '',
+                User_Notes: objState.notes || '',
+                Episode_Start_Time: episode.start_time,
+                Episode_End_Time: episode.end_time,
+                Episode_Duration: episode.duration,
+                Fixation_IDs: episode.fixation_ids || ''
+            });
+        });
+    });
+    
+    return data;
+}
+
+// Generate summary data
+function generateSummaryData() {
+    const summary = [];
+    
+    episodeData.forEach(episode => {
+        const episodeExclusions = exclusionData.episodes[episode.id] || {};
+        
+        let totalObjects = 1; // representative
+        let excludedObjects = episodeExclusions.representative?.excluded ? 1 : 0;
+        
+        totalObjects += (episode.other_objects_in_cropped_area || []).length;
+        excludedObjects += (episodeExclusions.cropped || []).filter(obj => obj.excluded).length;
+        
+        totalObjects += (episode.other_objects_outside_fov || []).length;
+        excludedObjects += (episodeExclusions.outside || []).filter(obj => obj.excluded).length;
+        
+        const inclusionRate = totalObjects > 0 ? ((totalObjects - excludedObjects) / totalObjects * 100).toFixed(1) : 0;
+        
+        summary.push({
+            Episode_ID: episode.id,
+            Total_Objects: totalObjects,
+            Excluded_Objects: excludedObjects,
+            Included_Objects: totalObjects - excludedObjects,
+            Inclusion_Rate_Percent: inclusionRate,
+            Episode_Duration: episode.duration,
+            Start_Time: episode.start_time,
+            End_Time: episode.end_time
+        });
+    });
+    
+    return summary;
+}
+
+// Generate statistics data
+function generateStatisticsData() {
+    let totalObjects = 0;
+    let totalExcluded = 0;
+    const reasonCounts = {};
+    
+    Object.values(exclusionData.episodes).forEach(episode => {
+        // Representative object
+        totalObjects++;
+        if (episode.representative.excluded) {
+            totalExcluded++;
+            const reason = episode.representative.reason || 'No reason provided';
+            reasonCounts[reason] = (reasonCounts[reason] || 0) + 1;
+        }
+        
+        // Cropped objects
+        episode.cropped.forEach(obj => {
+            totalObjects++;
+            if (obj.excluded) {
+                totalExcluded++;
+                const reason = obj.reason || 'No reason provided';
+                reasonCounts[reason] = (reasonCounts[reason] || 0) + 1;
+            }
+        });
+        
+        // Outside objects
+        episode.outside.forEach(obj => {
+            totalObjects++;
+            if (obj.excluded) {
+                totalExcluded++;
+                const reason = obj.reason || 'No reason provided';
+                reasonCounts[reason] = (reasonCounts[reason] || 0) + 1;
+            }
+        });
+    });
+    
+    const stats = [
+        {
+            Metric: 'Total Objects',
+            Value: totalObjects,
+            Percentage: '100.0%'
+        },
+        {
+            Metric: 'Excluded Objects',
+            Value: totalExcluded,
+            Percentage: totalObjects > 0 ? (totalExcluded / totalObjects * 100).toFixed(1) + '%' : '0.0%'
+        },
+        {
+            Metric: 'Included Objects',
+            Value: totalObjects - totalExcluded,
+            Percentage: totalObjects > 0 ? ((totalObjects - totalExcluded) / totalObjects * 100).toFixed(1) + '%' : '0.0%'
+        },
+        {
+            Metric: 'Export Date',
+            Value: new Date().toISOString(),
+            Percentage: ''
+        },
+        {
+            Metric: 'Export Version',
+            Value: exclusionData.metadata.exportVersion,
+            Percentage: ''
+        }
+    ];
+    
+    // Add reason breakdown
+    Object.entries(reasonCounts).forEach(([reason, count]) => {
+        stats.push({
+            Metric: `Reason: ${reason}`,
+            Value: count,
+            Percentage: totalExcluded > 0 ? (count / totalExcluded * 100).toFixed(1) + '%' : '0.0%'
+        });
+    });
+    
+    return stats;
+}
+
+// Download file utility
+function downloadFile(content, filename, contentType) {
+    const blob = new Blob([content], { type: contentType });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+}
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Enhanced standalone version loading...');
+    console.log('Episodes loaded:', episodeData.length);
+    console.log('Videos embedded:', Object.keys(videoData).length);
+    
+    // Initialize user session first
+    initializeUserSession();
+    
+    // Then initialize exclusion data
+    initializeExclusionData();
+    
+    if (episodeData.length > 0) {
+        displayEpisode(0);
+    } else {
+        console.error('No episode data found');
+    }
+    
+    // Initial sync status update
+    if (ENABLE_GOOGLE_SHEETS) {
+        updateSyncStatus('🔄', 'Ready to sync', '#17a2b8');
+    }
+});
+
+// Display episode data
+function displayEpisode(index) {
+    if (index < 0 || index >= episodeData.length) return;
+    
+    currentEpisodeIndex = index;
+    const episode = episodeData[index];
+    
+    console.log('Displaying episode:', episode.id);
+    
+    // Update navigation
+    document.getElementById('episodeInfo').textContent = `Episode ${index + 1} of ${episodeData.length}`;
+    document.getElementById('prevBtn').disabled = index === 0;
+    document.getElementById('nextBtn').disabled = index === episodeData.length - 1;
+    
+    // Update video
+    updateVideo(episode);
+    
+    // Update video info
+    updateVideoInfo(episode);
+    
+    // Update objects
+    updateObjects(episode);
+    
+    // Update captions
+    updateCaptions(episode);
+}
+
+// Update video with embedded data
+function updateVideo(episode) {
+    const videoPlayer = document.getElementById('videoPlayer');
+    const videoSource = document.getElementById('videoSource');
+    
+    console.log('Loading video for episode:', episode.id, 'clip_filename:', episode.clip_filename);
+    
+    // Use embedded video data
+    if (episode.clip_filename && videoData[episode.clip_filename]) {
+        const dataUrl = videoData[episode.clip_filename];
+        console.log('Loading embedded video:', episode.clip_filename);
+        
+        videoSource.src = dataUrl;
+        videoPlayer.load();
+        
+        // Add error handler
+        videoPlayer.onerror = function(e) {
+            console.error('Video loading error:', e);
+            console.error('Failed to load embedded video:', episode.clip_filename);
+            
+            // Show error message in video area
+            const videoContainer = videoPlayer.parentElement;
+            videoContainer.innerHTML = `
+                <div style="background: #f8d7da; color: #721c24; padding: 20px; border-radius: 8px; text-align: center;">
+                    <h4>Video Loading Error</h4>
+                    <p>Could not load embedded video: ${episode.clip_filename}</p>
+                    <small>Check browser console for more details</small>
+                </div>
+            `;
+        };
+        
+        // Success handler
+        videoPlayer.onloadedmetadata = function() {
+            console.log('Embedded video loaded successfully:', episode.clip_filename);
+            videoPlayer.currentTime = 0;
+        };
+        
+    } else {
+        console.log('No embedded video data for:', episode.clip_filename);
+        
+        // Show message that clip is not available
+        const videoContainer = videoPlayer.parentElement;
+        videoContainer.innerHTML = `
+            <div style="background: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; text-align: center;">
+                <h4>Video Not Embedded</h4>
+                <p>Episode ${episode.id}: ${episode.start_time.toFixed(2)}s - ${episode.end_time.toFixed(2)}s</p>
+                <p>Duration: ${episode.duration.toFixed(2)} seconds</p>
+                <small>Video data not found in standalone version</small>
+            </div>
+        `;
+    }
+}
+
+// Update video information
+function updateVideoInfo(episode) {
+    document.getElementById('duration').textContent = parseFloat(episode.duration).toFixed(2);
+    document.getElementById('timeRange').textContent = 
+        `${parseFloat(episode.start_time).toFixed(2)}s - ${parseFloat(episode.end_time).toFixed(2)}s`;
+    document.getElementById('fixationIds').textContent = episode.fixation_ids;
+}
+
+// Create object card HTML with exclusion functionality
+function createObjectCard(obj, type, episodeId, index) {
+    if (!obj || typeof obj !== 'object') {
+        return '<p>No data available</p>';
+    }
+    
+    const identity = obj.object_identity || 'Unknown';
+    const description = obj.detailed_caption || 'No description available';
+    const exclusionState = getExclusionState(episodeId, type, index);
+    const isExcluded = exclusionState.excluded;
+    const reason = exclusionState.reason || '';
+    
+    const cardId = `card_${episodeId}_${type}_${index}`;
+    const btnId = `btn_${episodeId}_${type}_${index}`;
+    const reasonId = `reason_${episodeId}_${type}_${index}`;
+    
+    return `
+        <div class="object-card-container ${isExcluded ? 'excluded-object' : ''}" id="${cardId}">
+            <div class="object-card-header">
+                <div class="object-name">${identity}</div>
+                <button class="exclude-btn ${isExcluded ? 'include' : 'exclude'}" 
+                        id="${btnId}" 
+                        onclick="toggleObjectExclusion(${episodeId}, '${type}', ${index})">
+                    ${isExcluded ? 'Include' : 'Exclude'}
+                </button>
+            </div>
+            <div class="object-description">${description}</div>
+            ${isExcluded ? `
+                <div class="exclusion-reason" id="${reasonId}">
+                    <label>Exclusion Reason:</label>
+                    <textarea placeholder="Enter reason for exclusion..." 
+                              onchange="updateExclusionReason(${episodeId}, '${type}', ${index}, this.value)">${reason}</textarea>
+                </div>
+            ` : ''}
+        </div>
+    `;
+}
+
+// Update objects display
+function updateObjects(episode) {
+    // Representative object
+    const repObjContainer = document.getElementById('representativeObject');
+    const repObj = episode.representative_object;
+    repObjContainer.innerHTML = createObjectCard(repObj, 'representative', episode.id, 0);
+    
+    // Other objects in cropped area
+    const croppedContainer = document.getElementById('otherObjectsCropped');
+    const croppedObjects = episode.other_objects_in_cropped_area;
+    croppedContainer.innerHTML = '';
+    if (Array.isArray(croppedObjects)) {
+        croppedObjects.forEach((obj, index) => {
+            const div = document.createElement('div');
+            div.className = 'object-item';
+            div.innerHTML = createObjectCard(obj, 'cropped', episode.id, index);
+            croppedContainer.appendChild(div);
+        });
+    }
+    
+    // Objects outside FOV
+    const outsideContainer = document.getElementById('objectsOutsideFov');
+    const outsideObjects = episode.other_objects_outside_fov;
+    outsideContainer.innerHTML = '';
+    if (Array.isArray(outsideObjects)) {
+        outsideObjects.forEach((obj, index) => {
+            const div = document.createElement('div');
+            div.className = 'outside-object-item';
+            div.innerHTML = createObjectCard(obj, 'outside', episode.id, index);
+            outsideContainer.appendChild(div);
+        });
+    }
+}
+
+// Update captions
+function updateCaptions(episode) {
+    const captionsContainer = document.getElementById('captions');
+    const captions = episode.captions;
+    
+    captionsContainer.innerHTML = '';
+    if (Array.isArray(captions)) {
+        captions.forEach(caption => {
+            const div = document.createElement('div');
+            div.className = 'caption-item';
+            div.textContent = caption;
+            captionsContainer.appendChild(div);
+        });
+    }
+}
+
+// Navigation functions
+function previousEpisode() {
+    if (currentEpisodeIndex > 0) {
+        displayEpisode(currentEpisodeIndex - 1);
+    }
+}
+
+function nextEpisode() {
+    if (currentEpisodeIndex < episodeData.length - 1) {
+        displayEpisode(currentEpisodeIndex + 1);
+    }
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'ArrowLeft') {
+        previousEpisode();
+    } else if (event.key === 'ArrowRight') {
+        nextEpisode();
+    }
+});
+
+// Auto-save exclusion data periodically
+setInterval(saveExclusionData, 30000); // Save every 30 seconds
+
+// Save on page unload
+window.addEventListener('beforeunload', function() {
+    saveExclusionData();
+});
+    </script>
+</body>
+</html>

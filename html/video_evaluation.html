@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Generation Model Evaluation System</title>
+    <link rel="stylesheet" href="evaluation_styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Video Generation Model Evaluation</h1>
+            <p>Comparative Video Quality Assessment</p>
+            <div id="phaseIndicator" class="phase-indicator">
+                <span id="currentPhase">Phase: Loading...</span>
+            </div>
+            <div class="save-controls">
+                <span id="saveInfo" class="save-info" style="display: none;"></span>
+                <button class="btn-save" onclick="saveAndExit()">💾 Save & Exit</button>
+                <button class="btn-clear-save" onclick="clearSavedProgress()" title="Delete saved progress">🗑️ Clear Save</button>
+            </div>
+        </header>
+
+        <!-- Segment Evaluation Phase -->
+        <div id="segmentPhase" class="evaluation-phase">
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <p id="progressText" class="progress-text">Progress: 0 of 0 tasks</p>
+            </div>
+
+            <div class="content-section">
+                <div class="video-container">
+                    <div class="paper-info">
+                        <h3 id="paperName">Paper Name</h3>
+                        <p id="paperDescription">Paper description</p>
+                    </div>
+                    
+                    <div class="video-wrapper">
+                        <video id="videoPlayer" controls>
+                            <source id="videoSource" src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+
+                    <div class="task-info">
+                        <h4 id="taskType">Task Type</h4>
+                        <p id="taskDescription">Task description</p>
+                    </div>
+                </div>
+
+                <div class="evaluation-panel">
+                    <div class="question-section">
+                        <h3>Evaluation Question</h3>
+                        <p id="evaluationQuestion" class="question-text">Question will appear here</p>
+                    </div>
+
+                    <div class="options-section">
+                        <h4>Your Rating:</h4>
+                        <div id="ratingOptions" class="rating-options">
+                            <!-- Options will be populated dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="follow-up-section">
+                        <h4 id="followUpLabel">Additional Comments (Optional):</h4>
+                        <textarea id="followUpText" rows="4" placeholder="Enter your comments here..."></textarea>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button id="skipBtn" class="btn btn-secondary" onclick="skipTask()">Skip</button>
+                        <button id="submitBtn" class="btn btn-primary" onclick="submitTask()" disabled>Submit Rating</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wholistic Review Phase -->
+        <div id="wholisticPhase" class="evaluation-phase" style="display: none;">
+            <div class="wholistic-header">
+                <h2>Wholistic Video Review</h2>
+                <p>Now please review complete videos from each paper and provide overall ratings</p>
+            </div>
+
+            <div class="progress-section">
+                <p id="wholisticProgress" class="progress-text">Paper 1 of 5</p>
+            </div>
+
+            <div class="content-section">
+                <div class="video-container">
+                    <div class="paper-info">
+                        <h3 id="wholisticPaperName">Paper Name</h3>
+                        <p id="wholisticPaperDescription">Paper description</p>
+                        <p class="video-list-label">Reviewing videos: <span id="videoList"></span></p>
+                    </div>
+                    
+                    <div class="video-wrapper">
+                        <video id="wholisticVideoPlayer" controls>
+                            <source id="wholisticVideoSource" src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="video-controls">
+                            <button id="prevVideoBtn" class="btn btn-small" onclick="previousWholisticVideo()">◀ Previous Video</button>
+                            <span id="videoCounter">Video 1 of X</span>
+                            <button id="nextVideoBtn" class="btn btn-small" onclick="nextWholisticVideo()">Next Video ▶</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="evaluation-panel">
+                    <h3>Rate This Paper on the Following Criteria (5-Star Scale):</h3>
+                    <div id="criteriaRatings" class="criteria-list">
+                        <!-- Criteria will be populated dynamically -->
+                    </div>
+
+                    <div class="overall-comments-section">
+                        <h4>Overall Comments:</h4>
+                        <textarea id="overallComments" rows="6" placeholder="Provide your overall assessment of this paper's video generation quality..."></textarea>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button id="skipPaperBtn" class="btn btn-secondary" onclick="skipPaper()">Skip Paper</button>
+                        <button id="submitPaperBtn" class="btn btn-primary" onclick="submitPaperReview()">Submit Review</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Phase -->
+        <div id="completionPhase" class="evaluation-phase" style="display: none;">
+            <div class="completion-message">
+                <h2>🎉 Evaluation Complete!</h2>
+                <p>Thank you for completing the video evaluation.</p>
+                <div class="summary-stats">
+                    <h3>Your Evaluation Summary:</h3>
+                    <div id="summaryStats" class="stats-grid">
+                        <!-- Stats will be populated dynamically -->
+                    </div>
+                </div>
+                <div class="export-section">
+                    <h3>Export Your Results:</h3>
+                    <button class="btn btn-success btn-large" onclick="exportToExcel()">📊 Download Excel Report</button>
+                    <button class="btn btn-secondary btn-large" onclick="exportToJSON()">📄 Download JSON Data</button>
+                </div>
+                <div class="restart-section">
+                    <button class="btn btn-secondary" onclick="restartEvaluation()">Start New Evaluation</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include SheetJS for Excel export -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="evaluation_script.js"></script>
+</body>
+</html>
+

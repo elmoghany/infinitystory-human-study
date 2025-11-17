@@ -1,0 +1,209 @@
+{
+  "papers": [
+    {
+      "id": "epicvideo",
+      "name": "EpicVideo",
+      "directory": "EpicVideo",
+      "description": "Your model with superior transitions, backgrounds, and visual appeal"
+    },
+    {
+      "id": "movieagent",
+      "name": "MovieAgent",
+      "directory": "MovieAgent",
+      "description": "Competitor model"
+    },
+    {
+      "id": "videogenofthought",
+      "name": "Video-Gen-of-Thought",
+      "directory": "Video-Gen-of-Thought",
+      "description": "Competitor model"
+    },
+    {
+      "id": "animator",
+      "name": "AniMaker",
+      "directory": "AniMaker",
+      "description": "Competitor model"
+    },
+    {
+      "id": "captaincinema",
+      "name": "Captain-Cinema",
+      "directory": "Captain-Cinema",
+      "description": "Competitor model"
+    }
+  ],
+  "evaluation_sections": [
+    {
+      "id": "visual_appeal",
+      "name": "Realistic & Visual Appeal",
+      "description": "Evaluate the visual quality, realism, and rendering quality of the video",
+      "order": 1,
+      "star_labels": {
+        "1": "Unrealistic - Severe Artifacts",
+        "2": "Unstable - Poor Quality",
+        "3": "Inconsistent Rendering",
+        "4": "Acceptable Quality",
+        "5": "Excellent - High-Quality Rendering"
+      }
+    },
+    {
+      "id": "background_consistency",
+      "name": "Background Consistency",
+      "description": "Assess whether backgrounds match real-world scenarios and remain consistent",
+      "order": 2,
+      "star_labels": {
+        "1": "Completely Inconsistent",
+        "2": "Major Inconsistencies",
+        "3": "Noticeable Inconsistencies",
+        "4": "Good Consistency",
+        "5": "Perfect Consistency"
+      }
+    },
+    {
+      "id": "transitions",
+      "name": "Shot-to-Shot Smooth Transitions",
+      "description": "Evaluate the smoothness of transitions between shots and scenes",
+      "order": 3,
+      "star_labels": {
+        "1": "Very Jarring - Severe Discontinuities",
+        "2": "Jarring - Major Jumps",
+        "3": "Noticeable Variations",
+        "4": "Smooth - Minor Issues",
+        "5": "Perfectly Smooth Transitions"
+      }
+    },
+    {
+      "id": "character_consistency",
+      "name": "Character Consistency",
+      "description": "Check if character appearances and identities remain consistent throughout",
+      "order": 4,
+      "star_labels": {
+        "1": "Completely Inconsistent",
+        "2": "Severe Inconsistencies",
+        "3": "Noticeable Variations",
+        "4": "Good Consistency",
+        "5": "Perfect Consistency"
+      }
+    },
+    {
+      "id": "narrative_coherence",
+      "name": "Narrative Coherence",
+      "description": "Assess if the story follows the script and flows logically",
+      "order": 5,
+      "star_labels": {
+        "1": "Unrelated to Script",
+        "2": "Partial Alignment",
+        "3": "Moderate Script Adherence",
+        "4": "Good Faithfulness - Well-Structured Narrative",
+        "5": "Perfect Script Adherence - Fully Coherent and Engaging"
+      }
+    },
+    {
+      "id": "physical_realism",
+      "name": "Physical Law Adherence",
+      "description": "Evaluate whether physics (gravity, motion, interactions) appears realistic",
+      "order": 6,
+      "star_labels": {
+        "1": "Completely Unrealistic Physics",
+        "2": "Frequent Violations",
+        "3": "Limited Realism",
+        "4": "Good Physical Consistency",
+        "5": "Flawless Adherence to Physics"
+      }
+    }
+  ],
+  "clips_per_section": 4,
+  "evaluation_clips": [
+    "episode_01.mp4",
+    "episode_02.mp4",
+    "episode_03.mp4",
+    "episode_04.mp4",
+    "episode_05.mp4",
+    "episode_06.mp4",
+    "episode_07.mp4",
+    "episode_08.mp4",
+    "episode_09.mp4",
+    "episode_10.mp4",
+    "episode_11.mp4",
+    "episode_12.mp4",
+    "episode_13.mp4",
+    "episode_14.mp4",
+    "episode_15.mp4",
+    "episode_16.mp4",
+    "episode_17.mp4",
+    "episode_18.mp4"
+  ],
+  "wholistic_criteria": [
+    {
+      "id": "realistic_visual_appeal",
+      "name": "Realistic & Visual Appeal",
+      "description": "Anime/movie-quality visuals, high fidelity",
+      "star_labels": {
+        "1": "Unrealistic - Severe Artifacts",
+        "2": "Unstable - Poor Quality",
+        "3": "Inconsistent Rendering",
+        "4": "Acceptable Quality",
+        "5": "Excellent - High-Quality Rendering"
+      }
+    },
+    {
+      "id": "background_consistency_overall",
+      "name": "Background Consistency",
+      "description": "Real-world scenario matching",
+      "star_labels": {
+        "1": "Completely Inconsistent",
+        "2": "Major Inconsistencies",
+        "3": "Noticeable Inconsistencies",
+        "4": "Good Consistency",
+        "5": "Perfect Consistency"
+      }
+    },
+    {
+      "id": "shot_to_shot_transitions",
+      "name": "Shot-to-Shot Smooth Transitions",
+      "description": "No sudden character/scene changes",
+      "star_labels": {
+        "1": "Very Jarring",
+        "2": "Jarring - Major Jumps",
+        "3": "Noticeable Variations",
+        "4": "Smooth - Minor Issues",
+        "5": "Perfectly Smooth"
+      }
+    },
+    {
+      "id": "character_consistency_overall",
+      "name": "Character Consistency",
+      "description": "Character names match throughout",
+      "star_labels": {
+        "1": "Completely Inconsistent",
+        "2": "Severe Inconsistencies",
+        "3": "Noticeable Variations",
+        "4": "Good Consistency",
+        "5": "Perfect Consistency"
+      }
+    },
+    {
+      "id": "narrative_coherence",
+      "name": "Narrative Coherence",
+      "description": "Logical plot flow",
+      "star_labels": {
+        "1": "Unrelated to Script",
+        "2": "Partial Alignment",
+        "3": "Moderate Script Adherence",
+        "4": "Good Faithfulness",
+        "5": "Perfect Script Adherence"
+      }
+    },
+    {
+      "id": "physical_law_adherence",
+      "name": "Physical Law Adherence",
+      "description": "Realistic physics (gravity, motion)",
+      "star_labels": {
+        "1": "Completely Unrealistic",
+        "2": "Frequent Violations",
+        "3": "Limited Realism",
+        "4": "Good Physical Consistency",
+        "5": "Flawless Adherence"
+      }
+    }
+  ]
+}
