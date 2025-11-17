@@ -1,8 +1,8 @@
 # 🎯 Video Annotation Tool
 
-> **Repository**: `infinitystory-human-study.github.io`
+> **Repository**: `infinitystory-human-study`
 > 
-> **Live Demo**: `https://infinitystory-human-study.github.io/annotation_tool.html`
+> **Live Demo**: `https://elmoghany.github.io/infinitystory-human-study/annotation_tool.html`
 
 A web-based annotation tool for video dataset quality control with automatic Google Sheets integration.
 
@@ -141,12 +141,10 @@ http://localhost:8000/annotation_tool.html
 ### Step 1: Create GitHub Repository
 
 1. Go to [GitHub.com](https://github.com/new) and create a new repository
-2. **Repository name**: `infinitystory-human-study.github.io` (exact name)
+2. **Repository name**: `infinitystory-human-study` (exact name)
 3. **Visibility**: Public (required for free GitHub Pages)
 4. **Do NOT** initialize with README (we already have one)
 5. Click **Create repository**
-
-**Note**: This creates a User/Organization GitHub Pages site at the root domain.
 
 ### Step 2: Set Up GitHub Secrets 🔐
 
