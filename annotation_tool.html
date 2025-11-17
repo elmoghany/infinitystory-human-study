@@ -485,7 +485,28 @@ header p {
                 </div>
             </div>
 
-            <div class="captions-section">
+            <div class="rating-section" style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                <h3 style="margin-bottom: 15px;">Rate This Video</h3>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <button id="rating-1" onclick="setRating(1)" class="rating-btn" style="flex: 1; padding: 15px; font-size: 18px; cursor: pointer; border: 2px solid #ddd; background: white; border-radius: 8px; transition: all 0.3s;">
+                        ⭐ Poor (1)
+                    </button>
+                    <button id="rating-2" onclick="setRating(2)" class="rating-btn" style="flex: 1; padding: 15px; font-size: 18px; cursor: pointer; border: 2px solid #ddd; background: white; border-radius: 8px; transition: all 0.3s;">
+                        ⭐⭐ Fair (2)
+                    </button>
+                    <button id="rating-3" onclick="setRating(3)" class="rating-btn" style="flex: 1; padding: 15px; font-size: 18px; cursor: pointer; border: 2px solid #ddd; background: white; border-radius: 8px; transition: all 0.3s;">
+                        ⭐⭐⭐ Good (3)
+                    </button>
+                </div>
+                <div id="ratingStatus" style="margin-top: 10px; font-style: italic; color: #666;"></div>
+                
+                <div style="margin-top: 20px;">
+                    <label for="ratingNotes" style="display: block; margin-bottom: 5px; font-weight: bold;">Additional Notes (Optional):</label>
+                    <textarea id="ratingNotes" onchange="saveRatingNotes()" placeholder="Enter any comments or observations about this video..." style="width: 100%; min-height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;"></textarea>
+                </div>
+            </div>
+
+            <div class="captions-section" style="display: none;">
                 <h3>Scene Captions</h3>
                 <div id="captions" class="captions-list"></div>
             </div>
@@ -517,7 +538,7 @@ let syncQueue = [];
 let isSyncing = false;
 let lastSyncTime = null;
 
-// Exclusion data structure
+// Annotation data structure (includes ratings and exclusions)
 let exclusionData = {
     metadata: {
         exportVersion: "1.0",
@@ -527,7 +548,8 @@ let exclusionData = {
         sessionId: '',
         userNotes: ""
     },
-    episodes: {}
+    episodes: {},
+    ratings: {}  // Store ratings for each video: {videoId: {rating: 1-3, notes: "...", timestamp: "..."}}
 };
 
 // ==========================================
@@ -603,7 +625,8 @@ function syncToGoogleSheets() {
         annotatorName: annotatorName,
         sessionId: sessionId,
         timestamp: new Date().toISOString(),
-        episodes: exclusionData.episodes
+        episodes: exclusionData.episodes,
+        ratings: exclusionData.ratings || {}
     };
     
     return fetch(GOOGLE_SHEETS_URL, {
@@ -1301,6 +1324,9 @@ function displayEpisode(index) {
     
     // Update captions
     updateCaptions(episode);
+    
+    // Update rating display
+    updateRatingDisplay();
 }
 
 // Update video from file path
@@ -1394,6 +1420,122 @@ function updateCaptions(episode) {
     if (captionsContainer) {
         captionsContainer.innerHTML = `<p style="color: #666;">Add your notes and annotations in the form below.</p>`;
     }
+}
+
+// ==========================================
+// Rating System
+// ==========================================
+function setRating(rating) {
+    const episode = episodeData[currentEpisodeIndex];
+    if (!episode) return;
+    
+    const videoId = episode.id;
+    
+    // Initialize rating object if it doesn't exist
+    if (!exclusionData.ratings) {
+        exclusionData.ratings = {};
+    }
+    
+    if (!exclusionData.ratings[videoId]) {
+        exclusionData.ratings[videoId] = {};
+    }
+    
+    // Save the rating
+    exclusionData.ratings[videoId].rating = rating;
+    exclusionData.ratings[videoId].videoId = videoId;
+    exclusionData.ratings[videoId].method = episode.method;
+    exclusionData.ratings[videoId].episode = episode.episode;
+    exclusionData.ratings[videoId].timestamp = new Date().toISOString();
+    exclusionData.ratings[videoId].annotator = annotatorName;
+    exclusionData.ratings[videoId].sessionId = sessionId;
+    
+    // Update UI
+    updateRatingDisplay();
+    
+    // Save to localStorage
+    saveExclusionData();
+    
+    // Update status
+    document.getElementById('ratingStatus').textContent = `✅ Rating saved: ${getRatingLabel(rating)}`;
+    document.getElementById('ratingStatus').style.color = '#28a745';
+    
+    console.log(`Rating ${rating} saved for video ${videoId}`);
+}
+
+function saveRatingNotes() {
+    const episode = episodeData[currentEpisodeIndex];
+    if (!episode) return;
+    
+    const videoId = episode.id;
+    const notes = document.getElementById('ratingNotes').value;
+    
+    if (!exclusionData.ratings) {
+        exclusionData.ratings = {};
+    }
+    
+    if (!exclusionData.ratings[videoId]) {
+        exclusionData.ratings[videoId] = {};
+    }
+    
+    exclusionData.ratings[videoId].notes = notes;
+    exclusionData.ratings[videoId].lastNotesUpdate = new Date().toISOString();
+    
+    // Save to localStorage
+    saveExclusionData();
+    
+    console.log(`Notes saved for video ${videoId}`);
+}
+
+function updateRatingDisplay() {
+    const episode = episodeData[currentEpisodeIndex];
+    if (!episode) return;
+    
+    const videoId = episode.id;
+    const rating = exclusionData.ratings && exclusionData.ratings[videoId] ? exclusionData.ratings[videoId].rating : null;
+    const notes = exclusionData.ratings && exclusionData.ratings[videoId] ? exclusionData.ratings[videoId].notes || '' : '';
+    
+    // Update button styles
+    for (let i = 1; i <= 3; i++) {
+        const btn = document.getElementById(`rating-${i}`);
+        if (btn) {
+            if (i === rating) {
+                btn.style.background = '#28a745';
+                btn.style.color = 'white';
+                btn.style.borderColor = '#28a745';
+                btn.style.fontWeight = 'bold';
+            } else {
+                btn.style.background = 'white';
+                btn.style.color = '#333';
+                btn.style.borderColor = '#ddd';
+                btn.style.fontWeight = 'normal';
+            }
+        }
+    }
+    
+    // Update status text
+    const statusDiv = document.getElementById('ratingStatus');
+    if (rating) {
+        statusDiv.textContent = `Current rating: ${getRatingLabel(rating)}`;
+        statusDiv.style.color = '#28a745';
+    } else {
+        statusDiv.textContent = 'Please select a rating above';
+        statusDiv.style.color = '#666';
+    }
+    
+    // Update notes textarea
+    const notesTextarea = document.getElementById('ratingNotes');
+    if (notesTextarea) {
+        notesTextarea.value = notes;
+    }
+}
+
+function getRatingLabel(rating) {
+    const labels = {
+        1: '⭐ Poor',
+        2: '⭐⭐ Fair',
+        3: '⭐⭐⭐ Good'
+    };
+    return labels[rating] || 'Unknown';
 }
 
 // Navigation functions

@@ -57,6 +57,25 @@ function doPost(e) {
       summarySheet.setFrozenRows(1);
     }
     
+    // Create or get Ratings sheet
+    let ratingsSheet = ss.getSheetByName('Ratings');
+    if (!ratingsSheet) {
+      ratingsSheet = ss.insertSheet('Ratings');
+      ratingsSheet.appendRow([
+        'Timestamp',
+        'Annotator_Name',
+        'Session_ID',
+        'Video_ID',
+        'Method',
+        'Episode',
+        'Rating',
+        'Notes',
+        'Rated_At'
+      ]);
+      ratingsSheet.getRange(1, 1, 1, 9).setFontWeight('bold').setBackground('#ea4335').setFontColor('#ffffff');
+      ratingsSheet.setFrozenRows(1);
+    }
+    
     // Process the data
     const timestamp = new Date();
     const annotatorName = data.annotatorName || 'Anonymous';
@@ -152,13 +171,46 @@ function doPost(e) {
     // Auto-resize columns for better readability
     dataSheet.autoResizeColumns(1, 11);
     
+    // Process ratings data
+    let ratingsAdded = 0;
+    if (data.ratings) {
+      // Clear previous ratings from this session
+      const ratingsRange = ratingsSheet.getDataRange();
+      const ratingsValues = ratingsRange.getValues();
+      for (let i = ratingsValues.length - 1; i >= 1; i--) {
+        if (ratingsValues[i][2] === sessionId) { // Column C is Session_ID
+          ratingsSheet.deleteRow(i + 1);
+        }
+      }
+      
+      // Add new ratings
+      Object.keys(data.ratings).forEach(videoId => {
+        const rating = data.ratings[videoId];
+        ratingsSheet.appendRow([
+          timestamp,
+          annotatorName,
+          sessionId,
+          rating.videoId || videoId,
+          rating.method || '',
+          rating.episode || '',
+          rating.rating || '',
+          rating.notes || '',
+          rating.timestamp || ''
+        ]);
+        ratingsAdded++;
+      });
+      
+      // Auto-resize ratings columns
+      ratingsSheet.autoResizeColumns(1, 9);
+    }
+    
     // Log the update
     logSheet.appendRow([
       timestamp,
       annotatorName,
       sessionId,
       'Data Update',
-      rowsAdded
+      rowsAdded + ' annotations, ' + ratingsAdded + ' ratings'
     ]);
     logSheet.autoResizeColumns(1, 5);
     
