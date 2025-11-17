@@ -31,12 +31,5 @@ config.js
 # Logs
 *.log
 
-# Video clips (exclude from git but keep directory structure)
-html/clips/**/*.mp4
-html/clips/**/*.avi
-html/clips/**/*.mov
-html/clips/**/*.webm
-
-# But keep the directory structure with .gitkeep files
-!html/clips/**/.gitkeep
+# Video clips - now including first 10 episodes from each directory for testing
 
