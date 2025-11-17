@@ -1239,21 +1239,35 @@ function downloadFile(content, filename, contentType) {
 }
 
 // Initialize the application
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Enhanced standalone version loading...');
-    console.log('Episodes loaded:', episodeData.length);
-    console.log('Videos embedded:', Object.keys(videoData).length);
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('Annotation tool loading...');
     
-    // Initialize user session first
-    initializeUserSession();
-    
-    // Then initialize exclusion data
-    initializeExclusionData();
-    
-    if (episodeData.length > 0) {
-        displayEpisode(0);
-    } else {
-        console.error('No episode data found');
+    // Load video data from JSON
+    try {
+        const response = await fetch('videos_data.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        episodeData = await response.json();
+        console.log('Videos loaded:', episodeData.length);
+        
+        // Update metadata
+        exclusionData.metadata.totalEpisodes = episodeData.length;
+        
+        // Initialize user session first
+        initializeUserSession();
+        
+        // Then initialize exclusion data
+        initializeExclusionData();
+        
+        if (episodeData.length > 0) {
+            displayEpisode(0);
+        } else {
+            console.error('No episode data found');
+        }
+    } catch (error) {
+        console.error('Error loading video data:', error);
+        alert('Error loading video data. Please refresh the page.');
     }
     
     // Initial sync status update
@@ -1289,65 +1303,39 @@ function displayEpisode(index) {
     updateCaptions(episode);
 }
 
-// Update video with embedded data
+// Update video from file path
 function updateVideo(episode) {
     const videoPlayer = document.getElementById('videoPlayer');
     const videoSource = document.getElementById('videoSource');
     
-    console.log('Loading video for episode:', episode.id, 'clip_filename:', episode.clip_filename);
+    console.log('Loading video:', episode.method, 'Episode', episode.episode, 'Path:', episode.path);
     
-    // Use embedded video data
-    if (episode.clip_filename && videoData[episode.clip_filename]) {
-        const dataUrl = videoData[episode.clip_filename];
-        console.log('Loading embedded video:', episode.clip_filename);
-        
-        videoSource.src = dataUrl;
-        videoPlayer.load();
-        
-        // Add error handler
-        videoPlayer.onerror = function(e) {
-            console.error('Video loading error:', e);
-            console.error('Failed to load embedded video:', episode.clip_filename);
-            
-            // Show error message in video area
-            const videoContainer = videoPlayer.parentElement;
-            videoContainer.innerHTML = `
-                <div style="background: #f8d7da; color: #721c24; padding: 20px; border-radius: 8px; text-align: center;">
-                    <h4>Video Loading Error</h4>
-                    <p>Could not load embedded video: ${episode.clip_filename}</p>
-                    <small>Check browser console for more details</small>
-                </div>
-            `;
-        };
-        
-        // Success handler
-        videoPlayer.onloadedmetadata = function() {
-            console.log('Embedded video loaded successfully:', episode.clip_filename);
-            videoPlayer.currentTime = 0;
-        };
-        
-    } else {
-        console.log('No embedded video data for:', episode.clip_filename);
-        
-        // Show message that clip is not available
-        const videoContainer = videoPlayer.parentElement;
-        videoContainer.innerHTML = `
-            <div style="background: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; text-align: center;">
-                <h4>Video Not Embedded</h4>
-                <p>Episode ${episode.id}: ${episode.start_time.toFixed(2)}s - ${episode.end_time.toFixed(2)}s</p>
-                <p>Duration: ${episode.duration.toFixed(2)} seconds</p>
-                <small>Video data not found in standalone version</small>
-            </div>
-        `;
-    }
+    videoSource.src = episode.path;
+    videoPlayer.load();
+    
+    // Add error handler
+    videoPlayer.onerror = function(e) {
+        console.error('Video loading error:', e);
+        alert(`Error loading video: ${episode.method} - Episode ${episode.episode}\nPath: ${episode.path}`);
+    };
+    
+    // Success handler
+    videoPlayer.onloadedmetadata = function() {
+        console.log('Video loaded successfully');
+        videoPlayer.currentTime = 0;
+    };
 }
 
 // Update video information
 function updateVideoInfo(episode) {
-    document.getElementById('duration').textContent = parseFloat(episode.duration).toFixed(2);
-    document.getElementById('timeRange').textContent = 
-        `${parseFloat(episode.start_time).toFixed(2)}s - ${parseFloat(episode.end_time).toFixed(2)}s`;
-    document.getElementById('fixationIds').textContent = episode.fixation_ids;
+    const videoInfoDiv = document.querySelector('.video-info');
+    if (videoInfoDiv) {
+        videoInfoDiv.innerHTML = `
+            <p><strong>Method:</strong> ${episode.method}</p>
+            <p><strong>Episode:</strong> ${episode.episode}</p>
+            <p><strong>Video ID:</strong> ${episode.id}</p>
+        `;
+    }
 }
 
 // Create object card HTML with exclusion functionality
@@ -1388,53 +1376,23 @@ function createObjectCard(obj, type, episodeId, index) {
     `;
 }
 
-// Update objects display
+// Update objects display (simplified for basic annotation)
 function updateObjects(episode) {
-    // Representative object
+    // Hide or simplify object sections for basic video annotation
     const repObjContainer = document.getElementById('representativeObject');
-    const repObj = episode.representative_object;
-    repObjContainer.innerHTML = createObjectCard(repObj, 'representative', episode.id, 0);
-    
-    // Other objects in cropped area
     const croppedContainer = document.getElementById('otherObjectsCropped');
-    const croppedObjects = episode.other_objects_in_cropped_area;
-    croppedContainer.innerHTML = '';
-    if (Array.isArray(croppedObjects)) {
-        croppedObjects.forEach((obj, index) => {
-            const div = document.createElement('div');
-            div.className = 'object-item';
-            div.innerHTML = createObjectCard(obj, 'cropped', episode.id, index);
-            croppedContainer.appendChild(div);
-        });
-    }
-    
-    // Objects outside FOV
     const outsideContainer = document.getElementById('objectsOutsideFov');
-    const outsideObjects = episode.other_objects_outside_fov;
-    outsideContainer.innerHTML = '';
-    if (Array.isArray(outsideObjects)) {
-        outsideObjects.forEach((obj, index) => {
-            const div = document.createElement('div');
-            div.className = 'outside-object-item';
-            div.innerHTML = createObjectCard(obj, 'outside', episode.id, index);
-            outsideContainer.appendChild(div);
-        });
-    }
+    
+    if (repObjContainer) repObjContainer.innerHTML = `<p style="color: #666;">Watch the video and provide annotations below.</p>`;
+    if (croppedContainer) croppedContainer.innerHTML = '';
+    if (outsideContainer) outsideContainer.innerHTML = '';
 }
 
-// Update captions
+// Update captions (simplified)
 function updateCaptions(episode) {
     const captionsContainer = document.getElementById('captions');
-    const captions = episode.captions;
-    
-    captionsContainer.innerHTML = '';
-    if (Array.isArray(captions)) {
-        captions.forEach(caption => {
-            const div = document.createElement('div');
-            div.className = 'caption-item';
-            div.textContent = caption;
-            captionsContainer.appendChild(div);
-        });
+    if (captionsContainer) {
+        captionsContainer.innerHTML = `<p style="color: #666;">Add your notes and annotations in the form below.</p>`;
     }
 }
 
