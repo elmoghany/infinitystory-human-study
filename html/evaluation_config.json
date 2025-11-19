@@ -1,6 +1,12 @@
 {
   "papers": [
     {
+      "id": "infinitystory",
+      "name": "InfinityStory",
+      "directory": "InfinityStory",
+      "description": "Our model with enhanced storytelling and transitions"
+    },
+    {
       "id": "epicvideo",
       "name": "EpicVideo",
       "directory": "EpicVideo",

@@ -33,3 +33,6 @@ config.js
 
 # Video clips - now including first 10 episodes from each directory for testing
 
+
+# Large video files (>50MB)
+html/clips/InfinityStory/large_videos/
