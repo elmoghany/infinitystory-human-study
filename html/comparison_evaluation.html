@@ -280,7 +280,8 @@
             <div class="instructions">
                 <h3>📋 Instructions</h3>
                 <ul>
-                    <li><strong>Watch all 3 videos carefully</strong> - You can replay them as many times as needed</li>
+                    <li><strong>Watch all 3 videos from start to finish</strong> - Seeking forward is disabled to ensure smooth playback</li>
+                    <li><strong>You can pause/play and replay</strong> from the beginning as many times as needed</li>
                     <li><strong>10 comparisons total</strong> - Each comparison shows InfinityStory vs 2 other methods</li>
                     <li><strong>Answer 5 questions</strong> for each comparison set</li>
                     <li><strong>Select the BEST video</strong> for each criterion</li>
@@ -298,19 +299,19 @@
             <div class="video-grid" id="videoGrid">
                 <div class="video-item">
                     <div class="video-label">Video A</div>
-                    <video id="videoA" controls preload="metadata">
+                    <video id="videoA" controls preload="metadata" controlsList="nodownload nofullscreen noremoteplayback">
                         <source id="sourceA" src="" type="video/mp4">
                     </video>
                 </div>
                 <div class="video-item">
                     <div class="video-label">Video B</div>
-                    <video id="videoB" controls preload="metadata">
+                    <video id="videoB" controls preload="metadata" controlsList="nodownload nofullscreen noremoteplayback">
                         <source id="sourceB" src="" type="video/mp4">
                     </video>
                 </div>
                 <div class="video-item">
                     <div class="video-label">Video C</div>
-                    <video id="videoC" controls preload="metadata">
+                    <video id="videoC" controls preload="metadata" controlsList="nodownload nofullscreen noremoteplayback">
                         <source id="sourceC" src="" type="video/mp4">
                     </video>
                 </div>

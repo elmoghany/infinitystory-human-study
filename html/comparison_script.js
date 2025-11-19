@@ -125,8 +125,52 @@ function loadComparison(index) {
         btn.classList.remove('selected');
     });
     
+    // Reapply seek prevention to videos
+    setupSeekPrevention();
+    
     updateProgress();
     checkSubmitButton();
+}
+
+// Disable seeking on videos to prevent freezing issues
+function setupSeekPrevention() {
+    const videos = ['videoA', 'videoB', 'videoC'];
+    videos.forEach(videoId => {
+        const video = document.getElementById(videoId);
+        
+        // Remove old listeners by cloning and replacing
+        const newVideo = video.cloneNode(true);
+        video.parentNode.replaceChild(newVideo, video);
+        const freshVideo = document.getElementById(videoId);
+        
+        // Store the current time
+        let currentTime = 0;
+        
+        // Update current time when playing
+        freshVideo.addEventListener('timeupdate', function() {
+            if (!freshVideo.seeking) {
+                currentTime = freshVideo.currentTime;
+            }
+        });
+        
+        // Prevent seeking forward (but allow replay from start)
+        freshVideo.addEventListener('seeking', function() {
+            if (freshVideo.currentTime > currentTime + 0.5) {
+                freshVideo.currentTime = currentTime;
+            }
+        });
+        
+        // Prevent clicks on progress bar for seeking
+        freshVideo.addEventListener('click', function(e) {
+            // Allow play/pause but not seek
+            if (freshVideo.paused) {
+                freshVideo.play();
+            } else {
+                freshVideo.pause();
+            }
+            e.preventDefault();
+        });
+    });
 }
 
 // Setup event listeners
@@ -150,6 +194,9 @@ function setupEventListeners() {
             checkSubmitButton();
         });
     });
+    
+    // Apply seek prevention
+    setupSeekPrevention();
 }
 
 // Check if all questions answered
