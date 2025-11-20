@@ -463,16 +463,8 @@ function setupSeekPrevention() {
             }
         });
         
-        // Prevent clicks on progress bar for seeking
-        freshVideo.addEventListener('click', function(e) {
-            // Allow play/pause but not seek
-            if (freshVideo.paused) {
-                freshVideo.play();
-            } else {
-                freshVideo.pause();
-            }
-            e.preventDefault();
-        });
+        // DO NOT prevent clicks - this blocks the play button and all controls on mobile!
+        // The seeking event handler above already prevents forward seeking
     });
 }
 
