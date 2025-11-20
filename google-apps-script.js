@@ -10,15 +10,30 @@ const SPREADSHEET_ID = '18TcgEqTi1HaS4AApDsrcGwCWjcSNX-18wv5a_77r5II';
 
 function doPost(e) {
   try {
+    // DEBUG: Log everything we receive
+    Logger.log('========== DEBUG START ==========');
+    Logger.log('e.postData: ' + JSON.stringify(e.postData));
+    Logger.log('e.parameter: ' + JSON.stringify(e.parameter));
+    Logger.log('e.parameters: ' + JSON.stringify(e.parameters));
+    Logger.log('e.contentLength: ' + e.contentLength);
+    Logger.log('========== DEBUG END ==========');
+    
     // Parse incoming data - handle both fetch (postData.contents) and form submission (parameter.data)
     let data;
     if (e.postData && e.postData.contents) {
       // Direct POST from fetch
+      Logger.log('Using postData.contents');
       data = JSON.parse(e.postData.contents);
     } else if (e.parameter && e.parameter.data) {
       // Form submission via iframe
+      Logger.log('Using parameter.data');
       data = JSON.parse(e.parameter.data);
+    } else if (e.parameters && e.parameters.data) {
+      // Try parameters array
+      Logger.log('Using parameters.data array');
+      data = JSON.parse(e.parameters.data[0]);
     } else {
+      Logger.log('ERROR: No data found in any location');
       throw new Error('No data received');
     }
     
