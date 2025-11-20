@@ -7,34 +7,16 @@
       "description": "Our model with enhanced storytelling and transitions"
     },
     {
-      "id": "epicvideo",
-      "name": "EpicVideo",
-      "directory": "EpicVideo",
-      "description": "Your model with superior transitions, backgrounds, and visual appeal"
-    },
-    {
       "id": "movieagent",
       "name": "MovieAgent",
       "directory": "MovieAgent",
-      "description": "Competitor model"
+      "description": "Baseline model"
     },
     {
       "id": "videogenofthought",
       "name": "Video-Gen-of-Thought",
       "directory": "Video-Gen-of-Thought",
-      "description": "Competitor model"
-    },
-    {
-      "id": "animator",
-      "name": "AniMaker",
-      "directory": "AniMaker",
-      "description": "Competitor model"
-    },
-    {
-      "id": "captaincinema",
-      "name": "Captain-Cinema",
-      "directory": "Captain-Cinema",
-      "description": "Competitor model"
+      "description": "Baseline model"
     }
   ],
   "evaluation_sections": [

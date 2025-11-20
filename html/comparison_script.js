@@ -42,7 +42,7 @@ async function loadConfiguration() {
 // Generate comparison sets
 function generateComparisons() {
     const papers = config.papers;
-    const episodes = config.evaluation_clips.slice(0, 10); // Use first 10 episodes
+    const episodes = config.evaluation_clips.slice(0, 4); // Use first 4 episodes
     
     // Find InfinityStory and other papers
     const infinityStory = papers.find(p => p.id === 'infinitystory');
