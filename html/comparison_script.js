@@ -339,31 +339,90 @@ function loadComparison(index) {
     
     console.log('📹 Video URLs:', {A: videoA, B: videoB, C: videoC});
     
-    document.getElementById('sourceA').src = videoA;
-    document.getElementById('sourceB').src = videoB;
-    document.getElementById('sourceC').src = videoC;
+    // Solution 2: Set src directly on video tag (iOS compatibility)
+    const videoAEl = document.getElementById('videoA');
+    const videoBEl = document.getElementById('videoB');
+    const videoCEl = document.getElementById('videoC');
+    
+    videoAEl.src = videoA;
+    videoBEl.src = videoB;
+    videoCEl.src = videoC;
     
     // Add error handlers for video loading
-    const videos = ['videoA', 'videoB', 'videoC'];
-    videos.forEach(id => {
-        const video = document.getElementById(id);
-        video.addEventListener('error', function(e) {
+    const videos = [
+        {id: 'videoA', el: videoAEl},
+        {id: 'videoB', el: videoBEl},
+        {id: 'videoC', el: videoCEl}
+    ];
+    
+    videos.forEach(({id, el}) => {
+        el.addEventListener('error', function(e) {
             console.error(`❌ Video ${id} failed to load:`, {
                 error: e,
-                src: video.querySelector('source')?.src,
-                networkState: video.networkState,
-                readyState: video.readyState
+                src: el.src,
+                networkState: el.networkState,
+                readyState: el.readyState
             });
         }, {once: true});
-        video.addEventListener('loadeddata', function() {
+        el.addEventListener('loadeddata', function() {
             console.log(`✅ Video ${id} loaded successfully`);
         }, {once: true});
     });
     
-    // Load videos (works on all devices with proper attributes)
-    document.getElementById('videoA').load();
-    document.getElementById('videoB').load();
-    document.getElementById('videoC').load();
+    // Solution 3 & 4: iOS - show enable button, load one-at-a-time
+    if (isMobile && /iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        console.log('📱 iOS detected - showing enable button');
+        const iosPrompt = document.getElementById('iosVideoPrompt');
+        const enableBtn = document.getElementById('enableVideosBtn');
+        
+        iosPrompt.style.display = 'block';
+        
+        enableBtn.onclick = async function() {
+            console.log('▶️ User tapped Enable Videos button');
+            iosPrompt.style.display = 'none';
+            
+            // Solution 4: User gesture to unlock playback
+            // Play and pause to unlock iOS restrictions (videos stay unmuted)
+            try {
+                console.log('🔓 Unlocking video A...');
+                await videoAEl.play();
+                videoAEl.pause();
+                videoAEl.currentTime = 0;
+                console.log('✅ Video A unlocked');
+                
+                // Solution 3: Load B and C after A is unlocked
+                videoBEl.load();
+                videoCEl.load();
+                
+                console.log('🔓 Unlocking video B...');
+                await videoBEl.play();
+                videoBEl.pause();
+                videoBEl.currentTime = 0;
+                console.log('✅ Video B unlocked');
+                
+                console.log('🔓 Unlocking video C...');
+                await videoCEl.play();
+                videoCEl.pause();
+                videoCEl.currentTime = 0;
+                console.log('✅ Video C unlocked');
+                
+                console.log('🎉 All videos unlocked and ready!');
+            } catch(e) {
+                console.error('❌ Failed to unlock videos:', e);
+            }
+        };
+        
+        // Solution 3: Load only first video initially
+        videoAEl.load();
+        console.log('📱 iOS: Loaded video A only, waiting for user gesture');
+        
+    } else {
+        // Android/Desktop: Load all videos immediately
+        console.log('🖥️ Non-iOS device - loading all videos');
+        videoAEl.load();
+        videoBEl.load();
+        videoCEl.load();
+    }
     
     // Reset answers
     currentAnswers = {

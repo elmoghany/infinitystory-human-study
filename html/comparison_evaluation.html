@@ -297,23 +297,34 @@
                 <p id="progressText" class="progress-text">Comparison 0 of 0</p>
             </div>
 
+            <!-- iOS: Tap to Enable Videos button -->
+            <div id="iosVideoPrompt" style="display: none; text-align: center; padding: 30px; background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; margin: 20px 0;">
+                <p style="font-size: 1.2em; color: #856404; margin-bottom: 15px;">
+                    <strong>📱 iOS Device Detected</strong><br>
+                    Tap the button below to enable video playback
+                </p>
+                <button id="enableVideosBtn" class="btn btn-primary" style="padding: 15px 50px; font-size: 1.1em;">
+                    ▶️ Enable Videos
+                </button>
+            </div>
+
             <div class="video-grid" id="videoGrid">
                 <div class="video-item">
                     <div class="video-label">Video A</div>
-                    <video id="videoA" controls playsinline webkit-playsinline preload="metadata">
-                        <source id="sourceA" src="" type="video/mp4">
+                    <video id="videoA" controls playsinline webkit-playsinline preload="none" 
+                           poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23333' width='100' height='100'/%3E%3Ctext fill='%23fff' x='50%25' y='50%25' text-anchor='middle' dy='.3em' font-size='20'%3EVideo A%3C/text%3E%3C/svg%3E">
                     </video>
                 </div>
                 <div class="video-item">
                     <div class="video-label">Video B</div>
-                    <video id="videoB" controls playsinline webkit-playsinline preload="metadata">
-                        <source id="sourceB" src="" type="video/mp4">
+                    <video id="videoB" controls playsinline webkit-playsinline preload="none"
+                           poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23333' width='100' height='100'/%3E%3Ctext fill='%23fff' x='50%25' y='50%25' text-anchor='middle' dy='.3em' font-size='20'%3EVideo B%3C/text%3E%3C/svg%3E">
                     </video>
                 </div>
                 <div class="video-item">
                     <div class="video-label">Video C</div>
-                    <video id="videoC" controls playsinline webkit-playsinline preload="metadata">
-                        <source id="sourceC" src="" type="video/mp4">
+                    <video id="videoC" controls playsinline webkit-playsinline preload="none"
+                           poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23333' width='100' height='100'/%3E%3Ctext fill='%23fff' x='50%25' y='50%25' text-anchor='middle' dy='.3em' font-size='20'%3EVideo C%3C/text%3E%3C/svg%3E">
                     </video>
                 </div>
             </div>
