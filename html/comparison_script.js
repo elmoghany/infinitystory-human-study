@@ -564,14 +564,15 @@ function syncToGoogleSheets(data) {
     console.log('📦 Full payload size:', JSON.stringify(dataToSync).length, 'bytes');
     
     // Use navigator.sendBeacon to bypass CORS
+    // IMPORTANT: Use text/plain to avoid CORS preflight
     try {
-        const blob = new Blob([JSON.stringify(dataToSync)], { type: 'application/json' });
+        const blob = new Blob([JSON.stringify(dataToSync)], { type: 'text/plain' });
         const success = navigator.sendBeacon(GOOGLE_APPS_SCRIPT_URL, blob);
         
         if (success) {
             lastSyncTime = new Date();
             console.log('✅ Data sent to Google Sheets via sendBeacon at', lastSyncTime.toLocaleTimeString());
-            console.log('✅ Data saved successfully (CORS bypassed)');
+            console.log('✅ sendBeacon returned true - data queued for delivery');
             isSyncing = false;
             return Promise.resolve(true);
         } else {
