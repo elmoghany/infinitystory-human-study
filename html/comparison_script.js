@@ -3,7 +3,7 @@
 // ==========================================
 // Web App URL (not the spreadsheet URL!)
 // Spreadsheet: https://docs.google.com/spreadsheets/d/18TcgEqTi1HaS4AApDsrcGwCWjcSNX-18wv5a_77r5II
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyrcFqlksgCMlBE-puZU3Q3T55HOhhhBrsb17lRSaar9jXEsMBeddIXIw96T4YNM5Cg_w/exec';
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwD1aZ3nWnmnEx36jce0J4R173yKqZ5yPPK75SoGyprK54J16zATsK0Ha0Y6jmFM3z6TA/exec';
 const ENABLE_GOOGLE_SHEETS = true; // ✅ ENABLED - Auto-sync active!
 
 // ==========================================
