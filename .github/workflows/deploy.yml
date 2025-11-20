@@ -22,19 +22,55 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
-      - name: Inject secrets
-        uses: cschleiden/replace-tokens@v1
-        with:
-          files: '["annotation_tool.html", "html/comparison_script.js", "google-apps-script.js", "google-apps-script-comparison.js", "config.js", "test_google_sheets.sh"]'
+      - name: Inject secrets with debug
+        run: |
+          echo "════════════════════════════════════════════════"
+          echo "🔍 DEBUG: Secret Injection Process"
+          echo "════════════════════════════════════════════════"
+          
+          echo ""
+          echo "📋 Step 1: Check if secrets are available"
+          if [ -z "${{ secrets.GOOGLE_SHEETS_URL }}" ]; then
+            echo "❌ GOOGLE_SHEETS_URL is EMPTY!"
+            exit 1
+          else
+            echo "✅ GOOGLE_SHEETS_URL exists (length: ${#GOOGLE_SHEETS_URL})"
+          fi
+          
+          if [ -z "${{ secrets.SPREADSHEET_ID }}" ]; then
+            echo "❌ SPREADSHEET_ID is EMPTY!"
+            exit 1
+          else
+            echo "✅ SPREADSHEET_ID exists: ${{ secrets.SPREADSHEET_ID }}"
+          fi
+          
+          echo ""
+          echo "📋 Step 2: BEFORE replacement"
+          grep -n "GOOGLE_SHEETS_URL" html/comparison_script.js | head -2
+          
+          echo ""
+          echo "📋 Step 3: Perform sed replacement"
+          sed -i "s|{{GOOGLE_SHEETS_URL}}|${{ secrets.GOOGLE_SHEETS_URL }}|g" html/comparison_script.js
+          sed -i "s|{{SPREADSHEET_ID}}|${{ secrets.SPREADSHEET_ID }}|g" google-apps-script.js
+          sed -i "s|{{SPREADSHEET_ID}}|${{ secrets.SPREADSHEET_ID }}|g" google-apps-script-comparison.js
+          echo "✅ Replacements done"
+          
+          echo ""
+          echo "📋 Step 4: AFTER replacement"
+          grep -n "GOOGLE_SHEETS_URL" html/comparison_script.js | head -2
+          
+          echo ""
+          echo "📋 Step 5: Verify"
+          if grep -q "{{GOOGLE_SHEETS_URL}}" html/comparison_script.js; then
+            echo "❌ ERROR: Placeholder still exists!"
+            exit 1
+          fi
+          
+          echo "✅ All secrets injected successfully!"
         env:
           GOOGLE_SHEETS_URL: ${{ secrets.GOOGLE_SHEETS_URL }}
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
       
-      - name: Verify secret injection
-        run: |
-          echo "🔍 Verifying secret injection..."
-          echo "✅ All placeholders successfully replaced!"
-          echo "🔒 Secret injection completed successfully"          
       - name: Setup Pages
         uses: actions/configure-pages@v4
       
