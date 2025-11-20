@@ -523,23 +523,30 @@ function completeEvaluation() {
 
 // Google Sheets Sync
 function syncToGoogleSheets(data) {
+    console.log('🔍 DEBUG: syncToGoogleSheets called');
+    console.log('🔍 DEBUG: ENABLE_GOOGLE_SHEETS =', ENABLE_GOOGLE_SHEETS);
+    console.log('🔍 DEBUG: GOOGLE_SHEETS_URL =', GOOGLE_SHEETS_URL);
+    console.log('🔍 DEBUG: URL is placeholder?', GOOGLE_SHEETS_URL === '{{GOOGLE_SHEETS_URL}}');
+    
     if (!ENABLE_GOOGLE_SHEETS) {
-        console.log('Google Sheets sync disabled');
+        console.log('❌ Google Sheets sync disabled');
         return Promise.resolve();
     }
     
     if (!GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL === '{{GOOGLE_SHEETS_URL}}') {
-        console.log('Google Sheets URL not configured');
+        console.log('❌ Google Sheets URL not configured (still has placeholder)');
+        console.log('🔍 DEBUG: Current value:', GOOGLE_SHEETS_URL);
         return Promise.resolve();
     }
     
     if (isSyncing) {
-        console.log('Sync already in progress');
+        console.log('⏳ Sync already in progress');
         return Promise.resolve();
     }
     
     isSyncing = true;
-    console.log('Syncing to Google Sheets...');
+    console.log('📤 Syncing to Google Sheets...');
+    console.log('🔗 Target URL:', GOOGLE_SHEETS_URL);
     
     const dataToSync = {
         evaluatorId: data.evaluatorId,
@@ -548,22 +555,52 @@ function syncToGoogleSheets(data) {
         comparisons: data.comparisons
     };
     
+    console.log('📊 Data to sync:', {
+        evaluatorId: dataToSync.evaluatorId,
+        totalComparisons: dataToSync.totalComparisons,
+        comparisonsCount: dataToSync.comparisons.length
+    });
+    console.log('📦 Full payload size:', JSON.stringify(dataToSync).length, 'bytes');
+    
+    // Test with a regular fetch first to see response
+    console.log('🧪 Testing connection...');
     return fetch(GOOGLE_SHEETS_URL, {
         method: 'POST',
-        mode: 'no-cors', // Required for Google Apps Script
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(dataToSync)
     })
-    .then(() => {
-        lastSyncTime = new Date();
-        console.log('Successfully synced to Google Sheets at', lastSyncTime.toLocaleTimeString());
-        isSyncing = false;
-        return true;
+    .then(response => {
+        console.log('✅ POST Response received');
+        console.log('📡 Status:', response.status, response.statusText);
+        console.log('📡 Response type:', response.type);
+        console.log('📡 Response OK:', response.ok);
+        
+        if (!response.ok && response.status !== 0) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        // Try to read response text
+        return response.text().then(text => {
+            console.log('📥 Response text:', text.substring(0, 200));
+            lastSyncTime = new Date();
+            console.log('✅ Successfully synced to Google Sheets at', lastSyncTime.toLocaleTimeString());
+            isSyncing = false;
+            return true;
+        }).catch(err => {
+            console.log('⚠️ Could not read response text (this is OK with CORS):', err.message);
+            lastSyncTime = new Date();
+            console.log('✅ POST request sent successfully at', lastSyncTime.toLocaleTimeString());
+            isSyncing = false;
+            return true;
+        });
     })
     .catch(error => {
-        console.error('Error syncing to Google Sheets:', error);
+        console.error('❌ Error syncing to Google Sheets:', error);
+        console.error('❌ Error name:', error.name);
+        console.error('❌ Error message:', error.message);
+        console.error('❌ Error stack:', error.stack);
         isSyncing = false;
         return false;
     });
