@@ -35,10 +35,21 @@ const evaluatorId = generateEvaluatorId();
 // Initialize
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('Loading comparison evaluation...');
-    await loadConfiguration();
-    generateComparisons();
-    setupEventListeners();
-    loadComparison(0);
+    try {
+        await loadConfiguration();
+        if (!config || !config.papers || !config.evaluation_clips) {
+            throw new Error('Configuration is invalid or incomplete');
+        }
+        generateComparisons();
+        if (comparisons.length === 0) {
+            throw new Error('Failed to generate comparisons');
+        }
+        setupEventListeners();
+        loadComparison(0);
+    } catch (error) {
+        console.error('Initialization error:', error);
+        showError('Failed to load evaluation tool: ' + error.message);
+    }
 });
 
 // Load configuration
@@ -53,8 +64,36 @@ async function loadConfiguration() {
     }
 }
 
+// Show error message to user
+function showError(message) {
+    const container = document.querySelector('.container');
+    if (container) {
+        container.innerHTML = `
+            <div style="background: white; padding: 30px; border-radius: 10px; text-align: center; max-width: 600px; margin: 50px auto;">
+                <h2 style="color: #e74c3c; margin-bottom: 20px;">⚠️ Error</h2>
+                <p style="color: #333; margin-bottom: 20px;">${message}</p>
+                <button onclick="location.reload()" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px;">
+                    🔄 Reload Page
+                </button>
+                <details style="margin-top: 30px; text-align: left; background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                    <summary style="cursor: pointer; font-weight: bold;">Debug Information</summary>
+                    <pre style="margin-top: 10px; font-size: 12px; overflow-x: auto;">Config: ${JSON.stringify(config, null, 2)}
+Comparisons: ${comparisons.length}
+User Agent: ${navigator.userAgent}</pre>
+                </details>
+            </div>
+        `;
+    }
+    alert(message);
+}
+
 // Generate comparison sets
 function generateComparisons() {
+    if (!config || !config.papers || !config.evaluation_clips) {
+        console.error('Config not loaded properly:', config);
+        throw new Error('Configuration not loaded');
+    }
+    
     const papers = config.papers;
     const episodes = config.evaluation_clips.slice(0, 4); // Use first 4 episodes
     
@@ -64,7 +103,12 @@ function generateComparisons() {
     
     if (!infinityStory) {
         console.error('InfinityStory not found in papers!');
-        return;
+        throw new Error('InfinityStory configuration missing');
+    }
+    
+    if (otherPapers.length < 2) {
+        console.error('Not enough comparison papers!');
+        throw new Error('Insufficient comparison methods configured');
     }
     
     // For each episode, create ONE comparison: InfinityStory + 2 random other papers
