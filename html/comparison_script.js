@@ -426,8 +426,8 @@ function loadComparison(index) {
         btn.classList.remove('selected');
     });
     
-    // Reapply seek prevention to videos
-    setupSeekPrevention();
+    // TEMPORARILY DISABLED: Seek prevention was interfering with mobile playback
+    // setupSeekPrevention();
     
     updateProgress();
     checkSubmitButton();
@@ -440,31 +440,24 @@ function setupSeekPrevention() {
     const videos = ['videoA', 'videoB', 'videoC'];
     videos.forEach(videoId => {
         const video = document.getElementById(videoId);
-        
-        // Remove old listeners by cloning and replacing
-        const newVideo = video.cloneNode(true);
-        video.parentNode.replaceChild(newVideo, video);
-        const freshVideo = document.getElementById(videoId);
+        if (!video) return;
         
         // Store the current time
         let currentTime = 0;
         
         // Update current time when playing
-        freshVideo.addEventListener('timeupdate', function() {
-            if (!freshVideo.seeking) {
-                currentTime = freshVideo.currentTime;
+        video.addEventListener('timeupdate', function() {
+            if (!video.seeking) {
+                currentTime = video.currentTime;
             }
         });
         
         // Prevent seeking forward (but allow replay from start)
-        freshVideo.addEventListener('seeking', function() {
-            if (freshVideo.currentTime > currentTime + 0.5) {
-                freshVideo.currentTime = currentTime;
+        video.addEventListener('seeking', function() {
+            if (video.currentTime > currentTime + 0.5) {
+                video.currentTime = currentTime;
             }
         });
-        
-        // DO NOT prevent clicks - this blocks the play button and all controls on mobile!
-        // The seeking event handler above already prevents forward seeking
     });
 }
 
@@ -490,8 +483,8 @@ function setupEventListeners() {
         });
     });
     
-    // Apply seek prevention
-    setupSeekPrevention();
+    // TEMPORARILY DISABLED: Seek prevention was interfering with mobile playback
+    // setupSeekPrevention();
 }
 
 // Check if all questions answered
