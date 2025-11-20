@@ -360,10 +360,27 @@ function loadComparison(index) {
         }, {once: true});
     });
     
-    // Reload videos
-    document.getElementById('videoA').load();
-    document.getElementById('videoB').load();
-    document.getElementById('videoC').load();
+    // Check if mobile/iOS and show load button
+    if (isMobile) {
+        const loadPrompt = document.getElementById('loadVideosPrompt');
+        const loadBtn = document.getElementById('loadVideosBtn');
+        loadPrompt.style.display = 'block';
+        
+        loadBtn.onclick = function() {
+            console.log('📱 User tapped Load Videos button');
+            loadPrompt.style.display = 'none';
+            
+            // Load videos with user gesture
+            document.getElementById('videoA').load();
+            document.getElementById('videoB').load();
+            document.getElementById('videoC').load();
+        };
+    } else {
+        // Desktop: load immediately
+        document.getElementById('videoA').load();
+        document.getElementById('videoB').load();
+        document.getElementById('videoC').load();
+    }
     
     // Reset answers
     currentAnswers = {
