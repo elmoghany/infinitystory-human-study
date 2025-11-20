@@ -42,9 +42,9 @@ console.log('🔍 DEBUG MODE:', {
     timestamp: new Date().toISOString()
 });
 
-// Initialize
-document.addEventListener('DOMContentLoaded', async function() {
-    console.log('✅ DOMContentLoaded fired');
+// Initialize function
+async function initializeApp() {
+    console.log('✅ Initializing comparison evaluation...');
     console.log('Loading comparison evaluation...');
     
     try {
@@ -84,7 +84,16 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.error('Stack:', error.stack);
         showError('Failed to load evaluation tool: ' + error.message);
     }
-});
+}
+
+// Initialize - handle both DOMContentLoaded and already-loaded cases
+if (document.readyState === 'loading') {
+    console.log('⏳ Document still loading, waiting for DOMContentLoaded...');
+    document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+    console.log('✅ Document already loaded, initializing immediately...');
+    initializeApp();
+}
 
 // Load configuration
 async function loadConfiguration() {
