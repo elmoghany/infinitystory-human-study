@@ -1,7 +1,9 @@
 // ==========================================
-// GOOGLE SHEETS CONFIGURATION
+// GOOGLE APPS SCRIPT CONFIGURATION
 // ==========================================
-const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwU6R84TQmF80RfeysIV_Ibu3CCj8GyiHzjVN98pIDAWzvpc9zphEXyzxZyZOdJLOLP/exec';
+// Web App URL (not the spreadsheet URL!)
+// Spreadsheet: https://docs.google.com/spreadsheets/d/18TcgEqTi1HaS4AApDsrcGwCWjcSNX-18wv5a_77r5II
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwU6R84TQmF80RfeysIV_Ibu3CCj8GyiHzjVN98pIDAWzvpc9zphEXyzxZyZOdJLOLP/exec';
 const ENABLE_GOOGLE_SHEETS = true; // ✅ ENABLED - Auto-sync active!
 
 // ==========================================
@@ -206,7 +208,7 @@ Clips: ${config?.evaluation_clips?.length || 0}
 Comparisons generated: ${comparisons.length}
 Current comparison: ${currentComparisonIndex + 1}/${comparisons.length}
 Evaluator ID: ${evaluatorId}
-Google Sheets URL: ${GOOGLE_SHEETS_URL === '{{GOOGLE_SHEETS_URL}}' ? 'NOT CONFIGURED' : 'CONFIGURED'}
+Google Apps Script URL: ${GOOGLE_APPS_SCRIPT_URL === '{{GOOGLE_APPS_SCRIPT_URL}}' ? 'NOT CONFIGURED' : 'CONFIGURED'}
 
 === DEVICE INFO ===
 User Agent: ${navigator.userAgent}
@@ -523,17 +525,17 @@ function completeEvaluation() {
 function syncToGoogleSheets(data) {
     console.log('🔍 DEBUG: syncToGoogleSheets called');
     console.log('🔍 DEBUG: ENABLE_GOOGLE_SHEETS =', ENABLE_GOOGLE_SHEETS);
-    console.log('🔍 DEBUG: GOOGLE_SHEETS_URL =', GOOGLE_SHEETS_URL);
-    console.log('🔍 DEBUG: URL is placeholder?', GOOGLE_SHEETS_URL === '{{GOOGLE_SHEETS_URL}}');
+    console.log('🔍 DEBUG: GOOGLE_APPS_SCRIPT_URL =', GOOGLE_APPS_SCRIPT_URL);
+    console.log('🔍 DEBUG: URL is placeholder?', GOOGLE_APPS_SCRIPT_URL === '{{GOOGLE_APPS_SCRIPT_URL}}');
     
     if (!ENABLE_GOOGLE_SHEETS) {
         console.log('❌ Google Sheets sync disabled');
         return Promise.resolve();
     }
     
-    if (!GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL === '{{GOOGLE_SHEETS_URL}}') {
-        console.log('❌ Google Sheets URL not configured (still has placeholder)');
-        console.log('🔍 DEBUG: Current value:', GOOGLE_SHEETS_URL);
+    if (!GOOGLE_APPS_SCRIPT_URL || GOOGLE_APPS_SCRIPT_URL === '{{GOOGLE_APPS_SCRIPT_URL}}') {
+        console.log('❌ Google Apps Script URL not configured (still has placeholder)');
+        console.log('🔍 DEBUG: Current value:', GOOGLE_APPS_SCRIPT_URL);
         return Promise.resolve();
     }
     
@@ -544,7 +546,7 @@ function syncToGoogleSheets(data) {
     
     isSyncing = true;
     console.log('📤 Syncing to Google Sheets...');
-    console.log('🔗 Target URL:', GOOGLE_SHEETS_URL);
+    console.log('🔗 Target URL:', GOOGLE_APPS_SCRIPT_URL);
     
     const dataToSync = {
         evaluatorId: data.evaluatorId,
@@ -562,7 +564,7 @@ function syncToGoogleSheets(data) {
     
     // Test with a regular fetch first to see response
     console.log('🧪 Testing connection...');
-    return fetch(GOOGLE_SHEETS_URL, {
+    return fetch(GOOGLE_APPS_SCRIPT_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
