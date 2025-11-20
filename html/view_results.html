@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Evaluation Results</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2d3748;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+        button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background: #667eea;
+            color: white;
+        }
+        tr:hover {
+            background: #f7fafc;
+        }
+        .winner {
+            font-weight: bold;
+            color: #10b981;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Evaluation Results Viewer</h1>
+        
+        <div class="section">
+            <h2>View Saved Results from Browser</h2>
+            <button onclick="viewLocalStorageResults()">View Browser Data</button>
+            <button onclick="clearLocalStorage()">Clear Browser Data</button>
+            <div id="localStorageResults"></div>
+        </div>
+
+        <div class="section">
+            <h2>Upload Result Files</h2>
+            <p>Upload JSON files downloaded by evaluators:</p>
+            <input type="file" id="fileInput" accept=".json" multiple onchange="loadUploadedFiles()">
+            <div id="uploadedResults"></div>
+        </div>
+
+        <div class="section">
+            <h2>Aggregate Statistics</h2>
+            <div id="aggregateStats"></div>
+        </div>
+    </div>
+
+    <script>
+        let allResults = [];
+
+        // View localStorage results
+        function viewLocalStorageResults() {
+            const saved = localStorage.getItem('comparison_results');
+            const resultsDiv = document.getElementById('localStorageResults');
+            
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    allResults = [data];
+                    displayResults(data, resultsDiv);
+                    updateAggregateStats();
+                } catch (error) {
+                    resultsDiv.innerHTML = '<p style="color: red;">Error parsing data: ' + error.message + '</p>';
+                }
+            } else {
+                resultsDiv.innerHTML = '<p>No results found in browser storage.</p>';
+            }
+        }
+
+        // Clear localStorage
+        function clearLocalStorage() {
+            if (confirm('Clear all evaluation data from this browser?')) {
+                localStorage.removeItem('comparison_results');
+                alert('Data cleared!');
+                location.reload();
+            }
+        }
+
+        // Load uploaded files
+        function loadUploadedFiles() {
+            const files = document.getElementById('fileInput').files;
+            const resultsDiv = document.getElementById('uploadedResults');
+            allResults = [];
+            resultsDiv.innerHTML = '';
+
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        allResults.push(data);
+                        const fileDiv = document.createElement('div');
+                        fileDiv.style.marginTop = '20px';
+                        displayResults(data, fileDiv);
+                        resultsDiv.appendChild(fileDiv);
+                        updateAggregateStats();
+                    } catch (error) {
+                        resultsDiv.innerHTML += '<p style="color: red;">Error parsing ' + file.name + ': ' + error.message + '</p>';
+                    }
+                };
+                reader.readAsText(file);
+            });
+        }
+
+        // Display individual results
+        function displayResults(data, container) {
+            container.innerHTML = `
+                <h3>Evaluator: ${data.evaluatorId}</h3>
+                <p>Completed: ${new Date(data.completedAt || data.timestamp).toLocaleString()}</p>
+                <p>Total Comparisons: ${data.results.length}</p>
+            `;
+
+            const table = document.createElement('table');
+            table.innerHTML = `
+                <tr>
+                    <th>#</th>
+                    <th>Episode</th>
+                    <th>Videos</th>
+                    <th>Background</th>
+                    <th>Transitions</th>
+                    <th>Characters</th>
+                    <th>Motion</th>
+                    <th>Aesthetic</th>
+                </tr>
+            `;
+
+            data.results.forEach(r => {
+                const row = table.insertRow();
+                row.innerHTML = `
+                    <td>${r.comparisonIndex}</td>
+                    <td>${r.episode}</td>
+                    <td>A: ${r.videoA}<br>B: ${r.videoB}<br>C: ${r.videoC}</td>
+                    <td class="${r.answers.backgroundConsistency === 'infinitystory' ? 'winner' : ''}">${r.answers.backgroundConsistency}</td>
+                    <td class="${r.answers.transitions === 'infinitystory' ? 'winner' : ''}">${r.answers.transitions}</td>
+                    <td class="${r.answers.characterConsistency === 'infinitystory' ? 'winner' : ''}">${r.answers.characterConsistency}</td>
+                    <td class="${r.answers.motionSmoothness === 'infinitystory' ? 'winner' : ''}">${r.answers.motionSmoothness}</td>
+                    <td class="${r.answers.imageQualityAesthetic === 'infinitystory' ? 'winner' : ''}">${r.answers.imageQualityAesthetic}</td>
+                `;
+            });
+
+            container.appendChild(table);
+        }
+
+        // Update aggregate statistics
+        function updateAggregateStats() {
+            if (allResults.length === 0) return;
+
+            const stats = {
+                backgroundConsistency: {},
+                transitions: {},
+                characterConsistency: {},
+                motionSmoothness: {},
+                imageQualityAesthetic: {}
+            };
+
+            const criteria = Object.keys(stats);
+            
+            allResults.forEach(data => {
+                data.results.forEach(r => {
+                    criteria.forEach(criterion => {
+                        const winner = r.answers[criterion];
+                        if (winner) {
+                            stats[criterion][winner] = (stats[criterion][winner] || 0) + 1;
+                        }
+                    });
+                });
+            });
+
+            const statsDiv = document.getElementById('aggregateStats');
+            statsDiv.innerHTML = '<h3>Win Counts Across All Evaluators</h3>';
+
+            const table = document.createElement('table');
+            table.innerHTML = '<tr><th>Criterion</th><th>InfinityStory</th><th>MovieAgent</th><th>VideoGenOfThought</th></tr>';
+
+            const criteriaNames = {
+                backgroundConsistency: 'Background Consistency',
+                transitions: 'Smooth Transitions',
+                characterConsistency: 'Character Consistency',
+                motionSmoothness: 'Motion Smoothness',
+                imageQualityAesthetic: 'Image Quality & Aesthetic'
+            };
+
+            criteria.forEach(criterion => {
+                const row = table.insertRow();
+                row.innerHTML = `
+                    <td>${criteriaNames[criterion]}</td>
+                    <td class="winner">${stats[criterion]['infinitystory'] || 0}</td>
+                    <td>${stats[criterion]['movieagent'] || 0}</td>
+                    <td>${stats[criterion]['videogenofthought'] || 0}</td>
+                `;
+            });
+
+            statsDiv.appendChild(table);
+        }
+
+        // Auto-load localStorage on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            viewLocalStorageResults();
+        });
+    </script>
+</body>
+</html>
+
+

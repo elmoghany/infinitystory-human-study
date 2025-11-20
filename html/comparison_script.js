@@ -1,4 +1,14 @@
+// ==========================================
+// GOOGLE SHEETS CONFIGURATION
+// ==========================================
+// This will be replaced by GitHub Actions during deployment
+// Secret name in GitHub: GOOGLE_SHEETS_URL
+const GOOGLE_SHEETS_URL = '{{GOOGLE_SHEETS_URL}}';
+const ENABLE_GOOGLE_SHEETS = true; // ✅ ENABLED - Auto-sync active!
+
+// ==========================================
 // Global state
+// ==========================================
 let config = null;
 let currentComparisonIndex = 0;
 let comparisons = [];
@@ -10,6 +20,10 @@ let currentAnswers = {
     motion: null,
     aesthetic: null
 };
+
+// Sync status
+let isSyncing = false;
+let lastSyncTime = null;
 
 // Generate evaluator ID
 function generateEvaluatorId() {
@@ -239,11 +253,15 @@ function submitComparison() {
     results.push(result);
     
     // Save to localStorage
-    localStorage.setItem('comparison_results', JSON.stringify({
+    const savedData = {
         evaluatorId: evaluatorId,
         timestamp: new Date().toISOString(),
         comparisons: results
-    }));
+    };
+    localStorage.setItem('comparison_results', JSON.stringify(savedData));
+    
+    // Sync to Google Sheets after each submission
+    syncToGoogleSheets(savedData);
     
     // Load next comparison
     loadComparison(currentComparisonIndex + 1);
@@ -262,6 +280,54 @@ function completeEvaluation() {
     document.getElementById('completionPhase').style.display = 'block';
 }
 
+// Google Sheets Sync
+function syncToGoogleSheets(data) {
+    if (!ENABLE_GOOGLE_SHEETS) {
+        console.log('Google Sheets sync disabled');
+        return Promise.resolve();
+    }
+    
+    if (!GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL === '{{GOOGLE_SHEETS_URL}}') {
+        console.log('Google Sheets URL not configured');
+        return Promise.resolve();
+    }
+    
+    if (isSyncing) {
+        console.log('Sync already in progress');
+        return Promise.resolve();
+    }
+    
+    isSyncing = true;
+    console.log('Syncing to Google Sheets...');
+    
+    const dataToSync = {
+        evaluatorId: data.evaluatorId,
+        timestamp: data.timestamp,
+        totalComparisons: data.comparisons.length,
+        comparisons: data.comparisons
+    };
+    
+    return fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Required for Google Apps Script
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSync)
+    })
+    .then(() => {
+        lastSyncTime = new Date();
+        console.log('Successfully synced to Google Sheets at', lastSyncTime.toLocaleTimeString());
+        isSyncing = false;
+        return true;
+    })
+    .catch(error => {
+        console.error('Error syncing to Google Sheets:', error);
+        isSyncing = false;
+        return false;
+    });
+}
+
 // Download results
 function downloadResults() {
     const data = {
@@ -270,6 +336,13 @@ function downloadResults() {
         totalComparisons: results.length,
         results: results
     };
+    
+    // Final sync to Google Sheets
+    syncToGoogleSheets({
+        evaluatorId: evaluatorId,
+        timestamp: new Date().toISOString(),
+        comparisons: results
+    });
     
     // Generate CSV
     let csv = 'Comparison,Episode,Episode Index,Video A,Video B,Video C,Best Background,Best Transitions,Best Characters,Best Motion,Best Aesthetic\n';
