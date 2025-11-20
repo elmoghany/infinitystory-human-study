@@ -11,8 +11,19 @@ const SPREADSHEET_ID = '{{SPREADSHEET_ID}}';
 
 function doPost(e) {
   try {
-    // Parse incoming data
-    const data = JSON.parse(e.postData.contents);
+    // Parse incoming data - handle both fetch (postData.contents) and form submission (parameter.data)
+    let data;
+    if (e.postData && e.postData.contents) {
+      // Direct POST from fetch
+      data = JSON.parse(e.postData.contents);
+    } else if (e.parameter && e.parameter.data) {
+      // Form submission via iframe
+      data = JSON.parse(e.parameter.data);
+    } else {
+      throw new Error('No data received');
+    }
+    
+    Logger.log('Received data type: ' + (e.postData ? 'fetch' : 'form'));
     
     // Detect data type: annotation tool vs comparison evaluation
     if (data.comparisons) {

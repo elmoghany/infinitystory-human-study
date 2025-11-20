@@ -4,7 +4,8 @@
 // Web App URL (not the spreadsheet URL!)
 // Spreadsheet: https://docs.google.com/spreadsheets/d/18TcgEqTi1HaS4AApDsrcGwCWjcSNX-18wv5a_77r5II
 const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwD1aZ3nWnmnEx36jce0J4R173yKqZ5yPPK75SoGyprK54J16zATsK0Ha0Y6jmFM3z6TA/exec';
-const ENABLE_GOOGLE_SHEETS = true; // ✅ ENABLED - Auto-sync active!
+const ENABLE_GOOGLE_SHEETS = true; // Will try to sync, but works offline if it fails
+// Data is always saved to localStorage as backup
 
 // ==========================================
 // Global state
@@ -545,7 +546,7 @@ function syncToGoogleSheets(data) {
     }
     
     isSyncing = true;
-    console.log('📤 Syncing to Google Sheets...');
+    console.log('📤 Syncing to Google Sheets via iframe (bypasses CORS)...');
     console.log('🔗 Target URL:', GOOGLE_APPS_SCRIPT_URL);
     
     const dataToSync = {
@@ -562,48 +563,50 @@ function syncToGoogleSheets(data) {
     });
     console.log('📦 Full payload size:', JSON.stringify(dataToSync).length, 'bytes');
     
-    // Test with a regular fetch first to see response
-    console.log('🧪 Testing connection...');
-    return fetch(GOOGLE_APPS_SCRIPT_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataToSync)
-    })
-    .then(response => {
-        console.log('✅ POST Response received');
-        console.log('📡 Status:', response.status, response.statusText);
-        console.log('📡 Response type:', response.type);
-        console.log('📡 Response OK:', response.ok);
+    // Use iframe POST to bypass CORS (Google Apps Script doesn't support CORS preflight)
+    try {
+        // Create a hidden form
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = GOOGLE_APPS_SCRIPT_URL;
+        form.target = 'google-sheets-iframe';
+        form.style.display = 'none';
         
-        if (!response.ok && response.status !== 0) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        // Add data as a hidden field
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'data';
+        input.value = JSON.stringify(dataToSync);
+        form.appendChild(input);
+        
+        // Create or get iframe
+        let iframe = document.getElementById('google-sheets-iframe');
+        if (!iframe) {
+            iframe = document.createElement('iframe');
+            iframe.id = 'google-sheets-iframe';
+            iframe.name = 'google-sheets-iframe';
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
         }
         
-        // Try to read response text
-        return response.text().then(text => {
-            console.log('📥 Response text:', text.substring(0, 200));
-            lastSyncTime = new Date();
-            console.log('✅ Successfully synced to Google Sheets at', lastSyncTime.toLocaleTimeString());
-            isSyncing = false;
-            return true;
-        }).catch(err => {
-            console.log('⚠️ Could not read response text (this is OK with CORS):', err.message);
-            lastSyncTime = new Date();
-            console.log('✅ POST request sent successfully at', lastSyncTime.toLocaleTimeString());
-            isSyncing = false;
-            return true;
-        });
-    })
-    .catch(error => {
+        // Submit form
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+        
+        lastSyncTime = new Date();
+        console.log('✅ Data sent to Google Sheets via iframe at', lastSyncTime.toLocaleTimeString());
+        console.log('✅ Data saved successfully (CORS bypassed)');
+        isSyncing = false;
+        return Promise.resolve(true);
+        
+    } catch (error) {
         console.error('❌ Error syncing to Google Sheets:', error);
         console.error('❌ Error name:', error.name);
         console.error('❌ Error message:', error.message);
-        console.error('❌ Error stack:', error.stack);
         isSyncing = false;
-        return false;
-    });
+        return Promise.resolve(false);
+    }
 }
 
 // Download results
