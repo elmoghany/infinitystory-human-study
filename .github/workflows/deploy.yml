@@ -25,8 +25,9 @@ jobs:
       - name: Inject Google Sheets URL
         run: |
           sed -i "s|{{GOOGLE_SHEETS_URL}}|${{ secrets.GOOGLE_SHEETS_URL }}|g" annotation_tool.html
-          echo "✅ Injected Google Sheets URL"
-      
+          sed -i "s|{{GOOGLE_SHEETS_URL}}|${{ secrets.GOOGLE_SHEETS_URL }}|g" html/comparison_script.js
+          echo "✅ Injected Google Sheets URL into annotation_tool.html and comparison_script.js"
+          
       - name: Setup Pages
         uses: actions/configure-pages@v4
       
