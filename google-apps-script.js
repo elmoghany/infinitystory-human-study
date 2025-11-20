@@ -5,9 +5,8 @@
 // and saves it to your Google Sheet
 
 // Spreadsheet ID from your Google Sheet URL
-// This will be replaced by GitHub Actions during deployment
-// Secret name in GitHub: SPREADSHEET_ID
-const SPREADSHEET_ID = '{{SPREADSHEET_ID}}';
+// https://docs.google.com/spreadsheets/d/18TcgEqTi1HaS4AApDsrcGwCWjcSNX-18wv5a_77r5II
+const SPREADSHEET_ID = '18TcgEqTi1HaS4AApDsrcGwCWjcSNX-18wv5a_77r5II';
 
 function doPost(e) {
   try {
