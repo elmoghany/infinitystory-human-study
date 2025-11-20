@@ -29,13 +29,36 @@ function doPost(e) {
       
   } catch (error) {
     Logger.log('Error: ' + error.toString());
-    return ContentService
-      .createTextOutput(JSON.stringify({
-        status: 'error',
-        message: error.toString()
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
+    return createCORSResponse({
+      status: 'error',
+      message: error.toString()
+    });
   }
+}
+
+// Handle CORS preflight requests
+function doGet(e) {
+  return createCORSResponse({
+    status: 'ok',
+    message: 'Video Evaluation Data Collection API is running (Annotation + Comparison)',
+    timestamp: new Date().toISOString()
+  });
+}
+
+// Helper function to create CORS-enabled responses
+function createCORSResponse(data) {
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON)
+    .setHeader('Access-Control-Allow-Origin', '*')
+    .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    .setHeader('Access-Control-Allow-Headers', 'Content-Type')
+    .setHeader('Access-Control-Max-Age', '3600');
+}
+
+// Handle OPTIONS requests for CORS preflight
+function doOptions(e) {
+  return createCORSResponse({});
 }
 
 // Handle annotation tool data
@@ -245,15 +268,13 @@ function handleAnnotationData(data) {
     Logger.log('Successfully added ' + rowsAdded + ' rows for ' + annotatorName);
     
     // Return success
-    return ContentService
-      .createTextOutput(JSON.stringify({
-        status: 'success',
-        message: `Updated ${rowsAdded} rows (${totalExcluded} excluded)`,
-        timestamp: timestamp.toISOString(),
-        rowsAdded: rowsAdded,
-        totalExcluded: totalExcluded
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
+    return createCORSResponse({
+      status: 'success',
+      message: `Updated ${rowsAdded} rows (${totalExcluded} excluded)`,
+      timestamp: timestamp.toISOString(),
+      rowsAdded: rowsAdded,
+      totalExcluded: totalExcluded
+    });
       
   } catch (error) {
     Logger.log('Error in annotation handler: ' + error.toString());
@@ -336,14 +357,12 @@ function handleComparisonData(data) {
     
     Logger.log('Successfully added ' + rowsAdded + ' comparison rows for ' + evaluatorId);
     
-    return ContentService
-      .createTextOutput(JSON.stringify({
-        status: 'success',
-        message: `Saved ${rowsAdded} comparisons`,
-        timestamp: timestamp.toISOString(),
-        rowsAdded: rowsAdded
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
+    return createCORSResponse({
+      status: 'success',
+      message: `Saved ${rowsAdded} comparisons`,
+      timestamp: timestamp.toISOString(),
+      rowsAdded: rowsAdded
+    });
       
   } catch (error) {
     Logger.log('Error in comparison handler: ' + error.toString());
@@ -574,16 +593,5 @@ function testComparisonEndpoint() {
   
   const result = doPost(e);
   Logger.log('Comparison test result: ' + result.getContent());
-}
-
-// Optional: Create a simple GET endpoint to check if the script is working
-function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({
-      status: 'ok',
-      message: 'Video Evaluation Data Collection API is running (Annotation + Comparison)',
-      timestamp: new Date().toISOString()
-    }))
-    .setMimeType(ContentService.MimeType.JSON);
 }
 
