@@ -546,7 +546,7 @@ function syncToGoogleSheets(data) {
     }
     
     isSyncing = true;
-    console.log('📤 Syncing to Google Sheets via iframe (bypasses CORS)...');
+    console.log('📤 Syncing to Google Sheets via sendBeacon (bypasses CORS)...');
     console.log('🔗 Target URL:', GOOGLE_APPS_SCRIPT_URL);
     
     const dataToSync = {
@@ -563,42 +563,22 @@ function syncToGoogleSheets(data) {
     });
     console.log('📦 Full payload size:', JSON.stringify(dataToSync).length, 'bytes');
     
-    // Use iframe POST to bypass CORS (Google Apps Script doesn't support CORS preflight)
+    // Use navigator.sendBeacon to bypass CORS
     try {
-        // Create a hidden form
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = GOOGLE_APPS_SCRIPT_URL;
-        form.target = 'google-sheets-iframe';
-        form.style.display = 'none';
+        const blob = new Blob([JSON.stringify(dataToSync)], { type: 'application/json' });
+        const success = navigator.sendBeacon(GOOGLE_APPS_SCRIPT_URL, blob);
         
-        // Add data as a hidden field
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'data';
-        input.value = JSON.stringify(dataToSync);
-        form.appendChild(input);
-        
-        // Create or get iframe
-        let iframe = document.getElementById('google-sheets-iframe');
-        if (!iframe) {
-            iframe = document.createElement('iframe');
-            iframe.id = 'google-sheets-iframe';
-            iframe.name = 'google-sheets-iframe';
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
+        if (success) {
+            lastSyncTime = new Date();
+            console.log('✅ Data sent to Google Sheets via sendBeacon at', lastSyncTime.toLocaleTimeString());
+            console.log('✅ Data saved successfully (CORS bypassed)');
+            isSyncing = false;
+            return Promise.resolve(true);
+        } else {
+            console.error('⚠️ sendBeacon returned false - queue might be full');
+            isSyncing = false;
+            return Promise.resolve(false);
         }
-        
-        // Submit form
-        document.body.appendChild(form);
-        form.submit();
-        document.body.removeChild(form);
-        
-        lastSyncTime = new Date();
-        console.log('✅ Data sent to Google Sheets via iframe at', lastSyncTime.toLocaleTimeString());
-        console.log('✅ Data saved successfully (CORS bypassed)');
-        isSyncing = false;
-        return Promise.resolve(true);
         
     } catch (error) {
         console.error('❌ Error syncing to Google Sheets:', error);
