@@ -22,7 +22,7 @@ Thumbs.db
 *.local.*
 test_server.py
 README.old.md
-config.js
+#config.js
 
 # Excel files (backups)
 *.xlsx

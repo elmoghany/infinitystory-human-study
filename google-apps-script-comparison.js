@@ -4,9 +4,9 @@
 // This script receives data from the comparison evaluation tool
 // and saves it to your Google Sheet
 
-// IMPORTANT: Replace this with your actual spreadsheet ID before deploying
-// Get it from: https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit
-const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE';
+// This will be replaced by GitHub Actions during deployment
+// Secret name in GitHub: SPREADSHEET_ID
+const SPREADSHEET_ID = '{{SPREADSHEET_ID}}';
 
 function doPost(e) {
   try {
