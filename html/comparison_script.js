@@ -3,7 +3,8 @@
 // ==========================================
 // This will be replaced by GitHub Actions during deployment
 // Secret name in GitHub: GOOGLE_SHEETS_URL
-const GOOGLE_SHEETS_URL = '{{GOOGLE_SHEETS_URL}}';
+// TEMPORARY: Hardcoded for testing - should be replaced by secret in production
+const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwU6R84TQmF80RfeysIV_Ibu3CCj8GyiHzjVN98pIDAWzvpc9zphEXyzxZyZOdJLOLP/exec';
 const ENABLE_GOOGLE_SHEETS = true; // ✅ ENABLED - Auto-sync active!
 
 // ==========================================
