@@ -32,22 +32,56 @@ function generateEvaluatorId() {
 
 const evaluatorId = generateEvaluatorId();
 
+// Debug mode - always show logs on mobile
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+console.log('🔍 DEBUG MODE:', {
+    isMobile: isMobile,
+    userAgent: navigator.userAgent,
+    screenWidth: window.innerWidth,
+    screenHeight: window.innerHeight,
+    timestamp: new Date().toISOString()
+});
+
 // Initialize
 document.addEventListener('DOMContentLoaded', async function() {
+    console.log('✅ DOMContentLoaded fired');
     console.log('Loading comparison evaluation...');
+    
     try {
+        console.log('📡 Fetching configuration...');
         await loadConfiguration();
-        if (!config || !config.papers || !config.evaluation_clips) {
-            throw new Error('Configuration is invalid or incomplete');
+        console.log('✅ Configuration loaded:', config ? 'SUCCESS' : 'FAILED');
+        
+        if (!config) {
+            throw new Error('Configuration is null - fetch failed');
         }
+        if (!config.papers) {
+            throw new Error('Configuration missing papers array');
+        }
+        if (!config.evaluation_clips) {
+            throw new Error('Configuration missing evaluation_clips array');
+        }
+        
+        console.log('📊 Config has', config.papers.length, 'papers and', config.evaluation_clips.length, 'clips');
+        
+        console.log('🎲 Generating comparisons...');
         generateComparisons();
+        console.log('✅ Generated', comparisons.length, 'comparisons');
+        
         if (comparisons.length === 0) {
-            throw new Error('Failed to generate comparisons');
+            throw new Error('Failed to generate comparisons - check papers configuration');
         }
+        
+        console.log('🎛️ Setting up event listeners...');
         setupEventListeners();
+        
+        console.log('🎬 Loading first comparison...');
         loadComparison(0);
+        
+        console.log('✅ Initialization complete!');
     } catch (error) {
-        console.error('Initialization error:', error);
+        console.error('❌ Initialization error:', error);
+        console.error('Stack:', error.stack);
         showError('Failed to load evaluation tool: ' + error.message);
     }
 });
@@ -55,13 +89,94 @@ document.addEventListener('DOMContentLoaded', async function() {
 // Load configuration
 async function loadConfiguration() {
     try {
+        console.log('📡 Fetching: ./evaluation_config.json');
         const response = await fetch('./evaluation_config.json');
-        config = await response.json();
-        console.log('Configuration loaded:', config);
+        console.log('📡 Response status:', response.status, response.statusText);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const text = await response.text();
+        console.log('📡 Response text length:', text.length);
+        
+        config = JSON.parse(text);
+        console.log('✅ Configuration loaded:', {
+            papers: config.papers?.length || 0,
+            clips: config.evaluation_clips?.length || 0,
+            sections: config.evaluation_sections?.length || 0
+        });
     } catch (error) {
-        console.error('Error loading configuration:', error);
-        alert('Error loading configuration. Please refresh the page.');
+        console.error('❌ Error loading configuration:', error);
+        console.error('Error details:', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name
+        });
+        throw error; // Re-throw to be caught by caller
     }
+}
+
+// Debug log storage for mobile
+const debugLogs = [];
+const originalConsoleLog = console.log;
+const originalConsoleError = console.error;
+
+// Override console.log to capture logs
+console.log = function(...args) {
+    debugLogs.push({type: 'log', time: new Date().toISOString(), message: args.join(' ')});
+    originalConsoleLog.apply(console, args);
+};
+
+console.error = function(...args) {
+    debugLogs.push({type: 'error', time: new Date().toISOString(), message: args.join(' ')});
+    originalConsoleError.apply(console, args);
+};
+
+// Add debug panel toggle (triple tap top-left corner)
+let tapCount = 0;
+let tapTimeout;
+document.addEventListener('click', function(e) {
+    if (e.clientX < 50 && e.clientY < 50) {
+        tapCount++;
+        clearTimeout(tapTimeout);
+        tapTimeout = setTimeout(() => tapCount = 0, 1000);
+        
+        if (tapCount === 3) {
+            showDebugPanel();
+            tapCount = 0;
+        }
+    }
+});
+
+function showDebugPanel() {
+    const panel = document.createElement('div');
+    panel.id = 'debugPanel';
+    panel.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); color: #0f0; font-family: monospace; font-size: 12px; overflow: auto; z-index: 10000; padding: 20px;';
+    panel.innerHTML = `
+        <div style="position: sticky; top: 0; background: #000; padding: 10px; border-bottom: 2px solid #0f0;">
+            <button onclick="this.parentElement.parentElement.remove()" style="background: #f00; color: #fff; border: none; padding: 10px 20px; cursor: pointer;">Close</button>
+            <button onclick="navigator.clipboard.writeText(document.getElementById('debugLogs').innerText)" style="background: #00f; color: #fff; border: none; padding: 10px 20px; cursor: pointer; margin-left: 10px;">Copy Logs</button>
+        </div>
+        <div id="debugLogs" style="white-space: pre-wrap; word-wrap: break-word; margin-top: 10px;">
+${debugLogs.map(log => `[${log.time.split('T')[1]}] ${log.type.toUpperCase()}: ${log.message}`).join('\n')}
+
+=== CURRENT STATE ===
+Config loaded: ${config ? 'YES' : 'NO'}
+Papers: ${config?.papers?.length || 0}
+Clips: ${config?.evaluation_clips?.length || 0}
+Comparisons generated: ${comparisons.length}
+Current comparison: ${currentComparisonIndex + 1}/${comparisons.length}
+Evaluator ID: ${evaluatorId}
+Google Sheets URL: ${GOOGLE_SHEETS_URL === '{{GOOGLE_SHEETS_URL}}' ? 'NOT CONFIGURED' : 'CONFIGURED'}
+
+=== DEVICE INFO ===
+User Agent: ${navigator.userAgent}
+Screen: ${window.innerWidth}x${window.innerHeight}
+Mobile: ${isMobile ? 'YES' : 'NO'}
+        </div>
+    `;
+    document.body.appendChild(panel);
 }
 
 // Show error message to user
@@ -75,16 +190,23 @@ function showError(message) {
                 <button onclick="location.reload()" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px;">
                     🔄 Reload Page
                 </button>
+                <button onclick="showDebugPanel()" style="background: #34495e; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; margin-left: 10px;">
+                    🐛 Show Debug Info
+                </button>
                 <details style="margin-top: 30px; text-align: left; background: #f8f9fa; padding: 15px; border-radius: 5px;">
-                    <summary style="cursor: pointer; font-weight: bold;">Debug Information</summary>
-                    <pre style="margin-top: 10px; font-size: 12px; overflow-x: auto;">Config: ${JSON.stringify(config, null, 2)}
+                    <summary style="cursor: pointer; font-weight: bold;">Quick Debug Info</summary>
+                    <pre style="margin-top: 10px; font-size: 12px; overflow-x: auto;">Config loaded: ${config ? 'YES' : 'NO'}
+Papers: ${config?.papers?.length || 0}
 Comparisons: ${comparisons.length}
-User Agent: ${navigator.userAgent}</pre>
+User Agent: ${navigator.userAgent}
+Last logs: ${debugLogs.slice(-5).map(l => l.message).join('\n')}</pre>
                 </details>
+                <p style="margin-top: 20px; font-size: 12px; color: #7f8c8d;">
+                    💡 Tip: Triple-tap top-left corner anytime to see full debug panel
+                </p>
             </div>
         `;
     }
-    alert(message);
 }
 
 // Generate comparison sets
@@ -151,7 +273,10 @@ function shuffleArray(array) {
 
 // Load current comparison
 function loadComparison(index) {
+    console.log(`🎬 Loading comparison ${index + 1}/${comparisons.length}`);
+    
     if (index >= comparisons.length) {
+        console.log('✅ All comparisons complete, showing completion screen');
         completeEvaluation();
         return;
     }
@@ -159,10 +284,40 @@ function loadComparison(index) {
     currentComparisonIndex = index;
     const comparison = comparisons[index];
     
+    console.log('📹 Comparison details:', {
+        episode: comparison.episode,
+        paperA: comparison.papers[0].directory,
+        paperB: comparison.papers[1].directory,
+        paperC: comparison.papers[2].directory
+    });
+    
     // Load videos
-    document.getElementById('sourceA').src = `clips/${comparison.papers[0].directory}/${comparison.episode}`;
-    document.getElementById('sourceB').src = `clips/${comparison.papers[1].directory}/${comparison.episode}`;
-    document.getElementById('sourceC').src = `clips/${comparison.papers[2].directory}/${comparison.episode}`;
+    const videoA = `clips/${comparison.papers[0].directory}/${comparison.episode}`;
+    const videoB = `clips/${comparison.papers[1].directory}/${comparison.episode}`;
+    const videoC = `clips/${comparison.papers[2].directory}/${comparison.episode}`;
+    
+    console.log('📹 Video URLs:', {A: videoA, B: videoB, C: videoC});
+    
+    document.getElementById('sourceA').src = videoA;
+    document.getElementById('sourceB').src = videoB;
+    document.getElementById('sourceC').src = videoC;
+    
+    // Add error handlers for video loading
+    const videos = ['videoA', 'videoB', 'videoC'];
+    videos.forEach(id => {
+        const video = document.getElementById(id);
+        video.addEventListener('error', function(e) {
+            console.error(`❌ Video ${id} failed to load:`, {
+                error: e,
+                src: video.querySelector('source')?.src,
+                networkState: video.networkState,
+                readyState: video.readyState
+            });
+        }, {once: true});
+        video.addEventListener('loadeddata', function() {
+            console.log(`✅ Video ${id} loaded successfully`);
+        }, {once: true});
+    });
     
     // Reload videos
     document.getElementById('videoA').load();
@@ -188,6 +343,8 @@ function loadComparison(index) {
     
     updateProgress();
     checkSubmitButton();
+    
+    console.log('✅ Comparison loaded, waiting for user input');
 }
 
 // Disable seeking on videos to prevent freezing issues
