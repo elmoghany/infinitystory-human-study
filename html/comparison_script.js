@@ -88,33 +88,56 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 // Load configuration
 async function loadConfiguration() {
-    try {
-        console.log('📡 Fetching: ./evaluation_config.json');
-        const response = await fetch('./evaluation_config.json');
-        console.log('📡 Response status:', response.status, response.statusText);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    const paths = [
+        './evaluation_config.json',
+        'evaluation_config.json',
+        '../evaluation_config.json',
+        '/html/evaluation_config.json'
+    ];
+    
+    console.log('📡 Current URL:', window.location.href);
+    console.log('📡 Base URL:', window.location.origin + window.location.pathname);
+    
+    let lastError = null;
+    
+    for (const path of paths) {
+        try {
+            console.log(`📡 Trying to fetch: ${path}`);
+            const response = await fetch(path);
+            console.log(`📡 Response for ${path}:`, response.status, response.statusText);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const text = await response.text();
+            console.log(`📡 Response text length for ${path}:`, text.length);
+            
+            if (text.length < 10) {
+                throw new Error('Response too short, probably invalid');
+            }
+            
+            config = JSON.parse(text);
+            console.log('✅ Configuration loaded successfully from:', path);
+            console.log('✅ Config details:', {
+                papers: config.papers?.length || 0,
+                clips: config.evaluation_clips?.length || 0,
+                sections: config.evaluation_sections?.length || 0
+            });
+            return; // Success!
+            
+        } catch (error) {
+            console.warn(`❌ Failed to load from ${path}:`, error.message);
+            lastError = error;
+            continue; // Try next path
         }
-        
-        const text = await response.text();
-        console.log('📡 Response text length:', text.length);
-        
-        config = JSON.parse(text);
-        console.log('✅ Configuration loaded:', {
-            papers: config.papers?.length || 0,
-            clips: config.evaluation_clips?.length || 0,
-            sections: config.evaluation_sections?.length || 0
-        });
-    } catch (error) {
-        console.error('❌ Error loading configuration:', error);
-        console.error('Error details:', {
-            message: error.message,
-            stack: error.stack,
-            name: error.name
-        });
-        throw error; // Re-throw to be caught by caller
     }
+    
+    // If we get here, all paths failed
+    console.error('❌ All config paths failed!');
+    console.error('Attempted paths:', paths);
+    console.error('Last error:', lastError);
+    throw new Error(`Failed to load configuration from any path. Last error: ${lastError?.message}`);
 }
 
 // Debug log storage for mobile
