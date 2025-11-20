@@ -45,20 +45,12 @@ function doGet(e) {
   });
 }
 
-// Helper function to create CORS-enabled responses
+// Helper function to create JSON responses
+// Google Apps Script automatically handles CORS when deployed as Web App with "Anyone" access
 function createCORSResponse(data) {
   return ContentService
     .createTextOutput(JSON.stringify(data))
-    .setMimeType(ContentService.MimeType.JSON)
-    .setHeader('Access-Control-Allow-Origin', '*')
-    .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-    .setHeader('Access-Control-Allow-Headers', 'Content-Type')
-    .setHeader('Access-Control-Max-Age', '3600');
-}
-
-// Handle OPTIONS requests for CORS preflight
-function doOptions(e) {
-  return createCORSResponse({});
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
 // Handle annotation tool data
