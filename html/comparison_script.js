@@ -92,11 +92,14 @@ async function loadConfiguration() {
         './evaluation_config.json',
         'evaluation_config.json',
         '../evaluation_config.json',
-        '/html/evaluation_config.json'
+        '/html/evaluation_config.json',
+        'https://elmoghany.github.io/infinitystory-human-study/html/evaluation_config.json',
+        window.location.origin + window.location.pathname.replace('comparison_evaluation.html', 'evaluation_config.json')
     ];
     
     console.log('📡 Current URL:', window.location.href);
     console.log('📡 Base URL:', window.location.origin + window.location.pathname);
+    console.log('📡 Will try paths:', paths);
     
     let lastError = null;
     
