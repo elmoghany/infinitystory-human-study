@@ -360,57 +360,10 @@ function loadComparison(index) {
         }, {once: true});
     });
     
-    // Check if mobile/iOS and show load button
-    if (isMobile) {
-        const loadPrompt = document.getElementById('loadVideosPrompt');
-        const loadBtn = document.getElementById('loadVideosBtn');
-        loadPrompt.style.display = 'block';
-        
-        loadBtn.onclick = async function() {
-            console.log('📱 User tapped Load Videos button');
-            loadPrompt.style.display = 'none';
-            
-            // Load and briefly play videos to unlock them (iOS requirement)
-            const videoA = document.getElementById('videoA');
-            const videoB = document.getElementById('videoB');
-            const videoC = document.getElementById('videoC');
-            
-            videoA.load();
-            videoB.load();
-            videoC.load();
-            
-            // Play briefly then pause (unlocks playback on iOS)
-            // Videos are muted initially to allow programmatic play
-            try {
-                await videoA.play();
-                videoA.pause();
-                videoA.currentTime = 0;
-                videoA.muted = false; // Unmute after unlocking
-                console.log('✅ Video A unlocked and unmuted');
-            } catch(e) { console.log('⚠️ Video A unlock failed:', e.message); }
-            
-            try {
-                await videoB.play();
-                videoB.pause();
-                videoB.currentTime = 0;
-                videoB.muted = false; // Unmute after unlocking
-                console.log('✅ Video B unlocked and unmuted');
-            } catch(e) { console.log('⚠️ Video B unlock failed:', e.message); }
-            
-            try {
-                await videoC.play();
-                videoC.pause();
-                videoC.currentTime = 0;
-                videoC.muted = false; // Unmute after unlocking
-                console.log('✅ Video C unlocked and unmuted');
-            } catch(e) { console.log('⚠️ Video C unlock failed:', e.message); }
-        };
-    } else {
-        // Desktop: load immediately
-        document.getElementById('videoA').load();
-        document.getElementById('videoB').load();
-        document.getElementById('videoC').load();
-    }
+    // Load videos (works on all devices with proper attributes)
+    document.getElementById('videoA').load();
+    document.getElementById('videoB').load();
+    document.getElementById('videoC').load();
     
     // Reset answers
     currentAnswers = {
