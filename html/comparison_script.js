@@ -88,18 +88,23 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 // Load configuration
 async function loadConfiguration() {
+    // Build dynamic path based on current URL
+    const currentURL = window.location.href;
+    const basePath = currentURL.substring(0, currentURL.lastIndexOf('/') + 1);
+    
     const paths = [
+        basePath + 'evaluation_config.json',  // Same directory as HTML (BEST for mobile)
         './evaluation_config.json',
         'evaluation_config.json',
+        window.location.origin + '/evaluation_config.json',
         '../evaluation_config.json',
         '/html/evaluation_config.json',
-        'https://elmoghany.github.io/infinitystory-human-study/html/evaluation_config.json',
-        window.location.origin + window.location.pathname.replace('comparison_evaluation.html', 'evaluation_config.json')
+        'https://elmoghany.github.io/infinitystory-human-study/html/evaluation_config.json'
     ];
     
     console.log('📡 Current URL:', window.location.href);
-    console.log('📡 Base URL:', window.location.origin + window.location.pathname);
-    console.log('📡 Will try paths:', paths);
+    console.log('📡 Base path:', basePath);
+    console.log('📡 Will try these paths in order:', paths);
     
     let lastError = null;
     
